@@ -113,14 +113,14 @@ package boundary.com.camel.component.ping;
  */
 public class PingArguments {
 	
-	private final long DEFAULT_PACKET_SIZE = 0;
-
+	public final String DEFAULT_HOST="localhost";
+	public final long DEFAULT_PACKET_SIZE = 0;
 	public final long DEFAULT_WAIT_TIME = 5000;
 	
+	private String host;
 	private long waitTime;
-
 	private long packetSize;
-	
+
 	public PingArguments() {
 		this.waitTime = DEFAULT_WAIT_TIME;
 		this.packetSize = DEFAULT_PACKET_SIZE;
@@ -145,6 +145,11 @@ public class PingArguments {
 
 	public long getPacketSize() {
 		return this.packetSize;
+	}
+
+	public void setHost(String host) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

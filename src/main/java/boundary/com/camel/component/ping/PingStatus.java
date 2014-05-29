@@ -2,6 +2,7 @@ package boundary.com.camel.component.ping;
 
 public class PingStatus implements ServiceStatus {
 	
+	private String host;
 	private int ttl;
 	private int transmitted;
 	private int received;
@@ -12,7 +13,15 @@ public class PingStatus implements ServiceStatus {
 	private double rttMDev;
 
 	public PingStatus() {
-		
+		host = "localhost";
+	}
+	
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public String getHost() {
+		return this.host;
 	}
 	
 	public void setTTL(int ttl) {
@@ -80,4 +89,6 @@ public class PingStatus implements ServiceStatus {
 	public double getRTTMDev() {
 		return this.rttMDev;
 	}
+
+
 }

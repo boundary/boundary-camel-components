@@ -18,7 +18,7 @@ public class PingProducer extends DefaultProducer {
     }
 
     public void process(Exchange exchange) throws Exception {
-        LOG.info(exchange.getIn().getBody().toString());    
+        LOG.debug(exchange.getIn().getBody().toString());
+        System.out.println(exchange.getIn().getBody().toString());
     }
-
 }

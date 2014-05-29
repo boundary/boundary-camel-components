@@ -8,9 +8,7 @@ package boundary.com.camel.component.ping;
  *
  */
 public enum ServiceCheckType {
-	
 	PING,
 	SOCKET,
 	HTTP
-
 }

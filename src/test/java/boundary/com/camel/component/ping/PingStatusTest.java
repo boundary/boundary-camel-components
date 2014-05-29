@@ -49,6 +49,13 @@ public class PingStatusTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	@Test
+	public void testHost() {
+		String expectedHost = "localhost";
+		status.setHost(expectedHost);
+		assertEquals("Check host",expectedHost,status.getHost());
+	}
 
 	@Test
 	public void testTransmitted() {
