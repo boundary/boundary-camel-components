@@ -20,6 +20,11 @@ public class PingConsumer extends ScheduledPollConsumer {
     @Override
     protected int poll() throws Exception {
         Exchange exchange = endpoint.createExchange();
+        
+        // Perform the health check on the host/service by
+        // 1) Running the Ping command
+        // 2) Attempting to connect to a socket on a port in the host
+        // 3) Making an HTTP(s) call to an endpoint
 
         // create a message body
         Date now = new Date();

@@ -14,12 +14,21 @@ public class PingComponentTest extends CamelTestSupport {
         
         assertMockEndpointsSatisfied();
     }
+    
+    @Test
+    public void testMultiplePing() throws Exception {
+        MockEndpoint mock = getMockEndpoint("mock:result");
+        mock.expectedMinimumMessageCount(3);       
+        
+        assertMockEndpointsSatisfied();
+    }
+
 
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("ping://foo")
+                from("ping://foo?delay=10")
                   .to("ping://bar")
                   .to("mock:result");
             }

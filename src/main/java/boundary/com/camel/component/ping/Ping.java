@@ -33,8 +33,7 @@ public class Ping {
 			// int exitValue = p.exitValue();
 			// System.err.println("exitValue=" + exitValue);
 
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
 			String s;
 
