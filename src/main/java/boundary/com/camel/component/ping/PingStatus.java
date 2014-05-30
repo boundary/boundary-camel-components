@@ -89,6 +89,19 @@ public class PingStatus implements ServiceStatus {
 	public double getRTTMDev() {
 		return this.rttMDev;
 	}
+	
+	public String toString() {
+		StringBuffer s = new StringBuffer();
+		s.append("host: " + host);
+		s.append("transmitted: " + transmitted);
+		s.append("received: " + received);
+		s.append(",rttMin: " + rttMin);
+		s.append(",rttAvg: " + rttAvg);
+		s.append(",rttMax: " + rttMax);
+		s.append(",rttMDev: " + rttMDev);
+		
+		return s.toString();
+	}
 
 
 }

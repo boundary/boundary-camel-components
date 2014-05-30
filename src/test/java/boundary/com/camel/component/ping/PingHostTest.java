@@ -19,20 +19,11 @@ public class PingHostTest extends CamelTestSupport {
         assertMockEndpointsSatisfied();
     }
     
-    @Test
-    public void testMultiplePing() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:result");
-        mock.expectedMinimumMessageCount(3);
-        mock.await(20, TimeUnit.SECONDS);
-        
-        assertMockEndpointsSatisfied();
-    }
-
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("ping://?type=ping&delay=5")
+                from("ping://?type=ping&delay=5&host=nowhere.com")
                   .to("ping://bar")
                   .to("mock:result");
             }

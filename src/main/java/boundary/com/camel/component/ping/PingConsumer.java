@@ -54,13 +54,13 @@ public class PingConsumer extends ScheduledPollConsumer {
         // to use generics??
         switch (endpoint.getServiceCheckType()) {
         case PING:
-        	message.setBody(executePingCheck());
+        	message.setBody(executePingCheck(),PingStatus.class);
         	break;
         case SOCKET:
-        	message.setBody(executeSocketCheck());
+        	message.setBody(executeSocketCheck(),SocketStatus.class);
         	break;
         case HTTP:
-        	message.setBody(executeHttpCheck());
+        	message.setBody(executeHttpCheck(),HttpStatus.class);
         	break;
         default:
         	assert(true);
