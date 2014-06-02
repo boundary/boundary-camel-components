@@ -7,7 +7,7 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
-public class PingHostTest extends CamelTestSupport {
+public class PingHostNotResolvableTest extends CamelTestSupport {
 
     @Test
     public void testPing() throws Exception {
