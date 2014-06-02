@@ -7,32 +7,22 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
-public class PingComponentTest extends CamelTestSupport {
+public class PingHostNotReachableTest extends CamelTestSupport {
 
     @Test
     public void testPing() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:result");
         mock.expectedMinimumMessageCount(1);
-        mock.await(20, TimeUnit.SECONDS);
-
+        mock.await(10, TimeUnit.SECONDS);
         
         assertMockEndpointsSatisfied();
     }
     
-    @Test
-    public void testMultiplePing() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:result");
-        mock.expectedMinimumMessageCount(3);
-        mock.await(30, TimeUnit.SECONDS);
-        
-        assertMockEndpointsSatisfied();
-    }
-
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("ping://foo?host=localhost&scheduler=quartz2&scheduler.cron=0/5+*+*+*+*+*")
+                from("ping://?type=ping&delay=5&host=192.168.1.27")
                   .to("ping://bar")
                   .to("mock:result");
             }

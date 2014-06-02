@@ -101,7 +101,9 @@ public class PingStatus extends ServiceStatus {
 	
 	public String toString() {
 		StringBuffer s = new StringBuffer();
-		s.append("host: " + host);
+		s.append("status: " + getStatus());
+		s.append(",message: " + getMessage());
+		s.append(",host: " + host);
 		s.append(",transmitted: " + transmitted);
 		s.append(",received: " + received);
 		s.append(",rttMin: " + rttMin);

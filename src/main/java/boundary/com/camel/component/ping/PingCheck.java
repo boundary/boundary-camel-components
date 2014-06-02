@@ -41,6 +41,8 @@ public class PingCheck implements ServiceCheck {
 	
 	private final static String TRANSMITTED_RECEIVED_REG_EX = "^(\\d+)\\s\\w+\\s\\w+\\W\\s(\\d+)\\.*";
 	private final static String RTT_REG_EX = "(\\d+\\.\\d+)\\/(\\d+\\.\\d+)\\/(\\d+\\.\\d+)\\/(\\d+\\.\\d+)";
+	private final static String NO_ROUTE_TO_HOST_REG_EX = "[Uu]nknown\\shost";
+	private final static String UNKNOWN_HOST_REG_EX = "^ping:\\s([\\w\\W\\s]*)";
 
 
 	public PingCheck() {
@@ -161,17 +163,24 @@ public class PingCheck implements ServiceCheck {
 	 * @param lines
 	 * @return PingSTatus
 	 */
-	protected PingStatus parse(int exitValue,List<String> outLines,List<String> errLines) {
+	protected PingStatus parse(int exitValue, List<String> outLines,
+			List<String> errLines) {
 		PingStatus status = new PingStatus();
-		Pattern rttPat = Pattern.compile(RTT_REG_EX);
+		Pattern roundTripTimePat = Pattern.compile(RTT_REG_EX);
+		Pattern transmitReceivePat = Pattern.compile(TRANSMITTED_RECEIVED_REG_EX);
+		Pattern noRouteToHostPat = Pattern.compile(NO_ROUTE_TO_HOST_REG_EX);
+		Pattern unknownHostPat = Pattern.compile(UNKNOWN_HOST_REG_EX);
+
 		status.setHost(getHost());
 
-		// If we exited successfully, parse the standard out
-		if (exitValue == 0) {
+		// Parse the output based on exit value of ping
+		switch (exitValue) {
 
+		// Clean exit
+		case 0:
 			// Extract the RTT times
 			for (String line : outLines) {
-				Matcher matcher = rttPat.matcher(line);
+				Matcher matcher = roundTripTimePat.matcher(line);
 				if (matcher.find()) {
 					status.setRTTMin(Double.parseDouble(matcher.group(1)));
 					status.setRTTAvg(Double.parseDouble(matcher.group(2)));
@@ -179,17 +188,46 @@ public class PingCheck implements ServiceCheck {
 					status.setRTTMDev(Double.parseDouble(matcher.group(4)));
 				}
 			}
-
 			// Extract the transmit and received counts
-			Pattern trPat = Pattern.compile(TRANSMITTED_RECEIVED_REG_EX);
 			for (String line : outLines) {
-				System.out.println(line);
-				Matcher matcher = trPat.matcher(line);
+				Matcher matcher = transmitReceivePat.matcher(line);
 				if (matcher.find()) {
 					status.setTransmitted(Integer.parseInt(matcher.group(1)));
 					status.setReceived(Integer.parseInt(matcher.group(2)));
 				}
 			}
+			
+			// If no ICMP packages are returned then consider the test failed
+			if (status.getReceived() == 0) {
+				status.setStatus(Status.FAIL);
+			}
+			else {
+				status.setStatus(Status.SUCCESS);
+			}
+			break;
+		// Error case: 1) Unable to resolve host ; 2) Host unreachable
+		case 1:
+		case 2:
+		case 68:
+			for (String line : outLines) {
+				Matcher matcher = transmitReceivePat.matcher(line);
+				if (matcher.find()) {
+					status.setTransmitted(Integer.parseInt(matcher.group(1)));
+					status.setReceived(Integer.parseInt(matcher.group(2)));
+				}
+			}
+			
+			for (String line: errLines) {
+				Matcher matcher = unknownHostPat.matcher(line);
+				if (matcher.find()) {
+					status.setMessage(matcher.group(1));
+				}
+			}
+			
+			status.setStatus(Status.FAIL);
+			break;
+		default:
+			assert false: "Unknown exit code";
 		}
 
 		return status;
@@ -218,7 +256,7 @@ public class PingCheck implements ServiceCheck {
 			ByteArrayOutputStream err = new ByteArrayOutputStream();
 
 			PumpStreamHandler handler = new PumpStreamHandler(out, err);
-			int exitValues[] = { 0, 2, 68 };
+			int exitValues[] = { 0, 1, 2, 68 };
 			executor.setExitValues(exitValues);
 			executor.setStreamHandler(handler);
 			int exitValue = executor.execute(commandLine);
