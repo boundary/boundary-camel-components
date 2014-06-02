@@ -1,6 +1,6 @@
 package boundary.com.camel.component.ping;
 
-public class SocketStatus implements ServiceStatus {
+public class SocketStatus extends ServiceStatus {
 	
 	SocketStatus() {
 		

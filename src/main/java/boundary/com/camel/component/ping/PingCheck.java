@@ -3,21 +3,22 @@ package boundary.com.camel.component.ping;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Implements a service check by using the ping command found in most *inix environments
  * 
@@ -27,6 +28,8 @@ import org.apache.commons.exec.PumpStreamHandler;
  *
  */
 public class PingCheck implements ServiceCheck {
+	
+    private static final Logger LOG = LoggerFactory.getLogger(PingCheck.class);
 
 	private long waitTime;
 	private long packetSize;
@@ -34,12 +37,14 @@ public class PingCheck implements ServiceCheck {
 	
 	private String pingCommand = null;
 	
+	private File [] unixPingPaths = {new File("/bin/ping"), new File("/usr/bin/ping"), new File("/sbin/ping")};
+	
 	private final static String TRANSMITTED_RECEIVED_REG_EX = "^(\\d+)\\s\\w+\\s\\w+\\W\\s(\\d+)\\.*";
 	private final static String RTT_REG_EX = "(\\d+\\.\\d+)\\/(\\d+\\.\\d+)\\/(\\d+\\.\\d+)\\/(\\d+\\.\\d+)";
 
 
 	public PingCheck() {
-		// Set defaults
+		// Set default host
 		host = "localhost";
 	}
 
@@ -51,6 +56,29 @@ public class PingCheck implements ServiceCheck {
 		return status;
 	}
 	/**
+	 * Get the absolute path to the ping command.
+	 * Defaults to the bare ping command that uses
+	 * the PATH variable to find the executable.
+	 * 
+	 * @return
+	 */
+	public String findPingCommand() {
+		// Default to letting
+		String s = "ping";
+
+		// Loop through our defined well-known paths
+		// to find the path to the ping command
+		for (File path: unixPingPaths) {
+			if (path.canExecute()) {
+				s = path.getAbsolutePath();
+				LOG.debug("Path to ping: {}",s);
+			}
+		}
+
+		return s;
+	}
+	
+	/**
 	 * Determines if the ping command exists and
 	 * where it is located.
 	 * 
@@ -60,13 +88,12 @@ public class PingCheck implements ServiceCheck {
 		String s;
 		
 		// Use the location of the ping command that was
-		// explictly set by configuration.
+		// explicitly set by configuration.
 		if (pingCommand != null) {
 			s = pingCommand;
 		}
 		else {
-			// TODO: File tests to see where the ping command exists
-			s = "ping";
+			s = findPingCommand();
 		}
 
 		return s;
@@ -134,51 +161,54 @@ public class PingCheck implements ServiceCheck {
 	 * @param lines
 	 * @return PingSTatus
 	 */
-	protected PingStatus parse(List<String> lines) {
+	protected PingStatus parse(int exitValue,List<String> outLines,List<String> errLines) {
 		PingStatus status = new PingStatus();
 		Pattern rttPat = Pattern.compile(RTT_REG_EX);
-		
-		// Extract the RTT times
-		for(String line: lines) {
-			Matcher matcher = rttPat.matcher(line);
-			if (matcher.find()) {
-				status.setRTTMin(Double.parseDouble(matcher.group(1)));
-				status.setRTTAvg(Double.parseDouble(matcher.group(2)));
-				status.setRTTMax(Double.parseDouble(matcher.group(3)));
-				status.setRTTMDev(Double.parseDouble(matcher.group(4)));
+		status.setHost(getHost());
+
+		// If we exited successfully, parse the standard out
+		if (exitValue == 0) {
+
+			// Extract the RTT times
+			for (String line : outLines) {
+				Matcher matcher = rttPat.matcher(line);
+				if (matcher.find()) {
+					status.setRTTMin(Double.parseDouble(matcher.group(1)));
+					status.setRTTAvg(Double.parseDouble(matcher.group(2)));
+					status.setRTTMax(Double.parseDouble(matcher.group(3)));
+					status.setRTTMDev(Double.parseDouble(matcher.group(4)));
+				}
+			}
+
+			// Extract the transmit and received counts
+			Pattern trPat = Pattern.compile(TRANSMITTED_RECEIVED_REG_EX);
+			for (String line : outLines) {
+				System.out.println(line);
+				Matcher matcher = trPat.matcher(line);
+				if (matcher.find()) {
+					status.setTransmitted(Integer.parseInt(matcher.group(1)));
+					status.setReceived(Integer.parseInt(matcher.group(2)));
+				}
 			}
 		}
-		
-		// Extract the transmit and received counts
-		Pattern trPat = Pattern.compile(TRANSMITTED_RECEIVED_REG_EX);
-		for(String line: lines) {
-			System.out.println(line);
-			Matcher matcher = trPat.matcher(line);
-			if (matcher.find()) {
-				status.setTransmitted(Integer.parseInt(matcher.group(1)));
-				status.setReceived(Integer.parseInt(matcher.group(2)));
-			}
-		}
-		
+
 		return status;
 	}
 
 	protected PingStatus executeCheck() {
 		PingStatus status = null;
+		
+		LOG.debug("executeCheck()");
+
 
 		// Configure our command line based on the OS
 		// we are running on.
 		CommandLine commandLine = configureCommandline();
 
 		// Create the executor and set the expected exit
-		// value of 0.
+		// value of 0,2
 		DefaultExecutor executor = new DefaultExecutor();
-		executor.setExitValue(0);
-		
-		// Add a watchdog. TBD: Maybe dead code
-		ExecuteWatchdog watchdog = new ExecuteWatchdog(60000);
-		executor.setWatchdog(watchdog);
-		
+				
 		// 1) Execute the ping command
 		// 2) Get the output from the command
 		// 3) Parse the output
@@ -188,13 +218,13 @@ public class PingCheck implements ServiceCheck {
 			ByteArrayOutputStream err = new ByteArrayOutputStream();
 
 			PumpStreamHandler handler = new PumpStreamHandler(out, err);
-			executor.setExitValue(0);
+			int exitValues[] = { 0, 2, 68 };
+			executor.setExitValues(exitValues);
 			executor.setStreamHandler(handler);
 			int exitValue = executor.execute(commandLine);
-			List<String> lines = getStringOutput(out);
-			
-			status = parse(lines);
-			
+			List<String> outLines = getStringOutput(out);
+			List<String> errLines = getStringOutput(err);
+ 			status = parse(exitValue,outLines,errLines);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

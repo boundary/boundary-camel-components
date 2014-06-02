@@ -1,6 +1,11 @@
 package boundary.com.camel.component.ping;
 
-public class PingStatus implements ServiceStatus {
+/**
+ * Contains information regarding the results of sending an ICMP ping to a host.
+ * @author davidg
+ *
+ */
+public class PingStatus extends ServiceStatus {
 	
 	private String host;
 	private int ttl;
@@ -24,9 +29,13 @@ public class PingStatus implements ServiceStatus {
 		return this.host;
 	}
 	
+	/**
+	 * Sets the TTL (Time To Live) on the ICMP packet sent to the host.
+	 * 
+	 * @param ttl
+	 */
 	public void setTTL(int ttl) {
 		this.ttl = ttl;
-	
 	}
 	
 	public int getTTL() {
@@ -93,8 +102,8 @@ public class PingStatus implements ServiceStatus {
 	public String toString() {
 		StringBuffer s = new StringBuffer();
 		s.append("host: " + host);
-		s.append("transmitted: " + transmitted);
-		s.append("received: " + received);
+		s.append(",transmitted: " + transmitted);
+		s.append(",received: " + received);
 		s.append(",rttMin: " + rttMin);
 		s.append(",rttAvg: " + rttAvg);
 		s.append(",rttMax: " + rttMax);
@@ -102,6 +111,4 @@ public class PingStatus implements ServiceStatus {
 		
 		return s.toString();
 	}
-
-
 }

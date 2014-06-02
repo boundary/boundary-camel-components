@@ -1,11 +1,10 @@
 package boundary.com.camel.component.ping;
 
-public interface ServiceStatus {
+public abstract class ServiceStatus {
 	
-	Status status = Status.UP;
+	Status status = Status.SUCCESS;
 	
-	public enum Status {
-		UP,
-		DOWN
+	void setStatus(Status status) {
+		this.status = Status.SUCCESS;
 	}
 }
