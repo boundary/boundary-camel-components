@@ -1,7 +1,9 @@
 package boundary.com.camel.component.ping;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
@@ -12,20 +14,36 @@ public class PingComponentTest extends CamelTestSupport {
     @Test
     public void testPing() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:result");
-        mock.expectedMinimumMessageCount(1);
-        mock.await(20, TimeUnit.SECONDS);
-
+        mock.expectedMessageCount(1);
+        mock.await(5, TimeUnit.SECONDS);
         
-        assertMockEndpointsSatisfied();
+        mock.assertIsSatisfied();
+        List <Exchange> receivedExchanges = mock.getReceivedExchanges();
+        for(Exchange e: receivedExchanges) {
+        	PingStatus status = e.getIn().getBody(PingStatus.class);
+        	
+         	assertTrue("check transmitted",status.getTransmitted() > 0);
+        	assertEquals("check transmitted/received", status.getTransmitted(),status.getReceived());
+           	assertTrue("check ping status",status.getStatus() == Status.SUCCESS);
+        }
     }
     
     @Test
     public void testMultiplePing() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:result");
-        mock.expectedMinimumMessageCount(3);
-        mock.await(30, TimeUnit.SECONDS);
+        mock.expectedMessageCount(3);
+        mock.await(10, TimeUnit.SECONDS);
         
-        assertMockEndpointsSatisfied();
+        mock.assertIsSatisfied();
+        List <Exchange> receivedExchanges = mock.getReceivedExchanges();
+        for(Exchange e: receivedExchanges) {
+        	PingStatus status = e.getIn().getBody(PingStatus.class);
+        	
+        	assertTrue("check transmitted",status.getTransmitted() > 0);
+        	assertEquals("check transmitted/received", status.getTransmitted(),status.getReceived());
+        	assertTrue("check ping status",status.getStatus() == Status.SUCCESS);
+        }
+
     }
 
     @Override
