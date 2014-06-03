@@ -1,1 +1,1 @@
-class=boundary.com.camel.component.ping.PingComponent
+class=com.boundary.camel.component.ping.PingComponent
