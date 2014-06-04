@@ -1,4 +1,4 @@
-package com.boundary.camel.component.ping;
+package com.boundary.camel.component.http;
 
 import com.boundary.camel.component.common.ServiceInfo;
 

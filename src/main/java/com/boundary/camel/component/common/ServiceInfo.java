@@ -11,7 +11,7 @@ public class ServiceInfo {
 	private String message;
 	
 	public ServiceInfo() {
-		
+		status = ServiceStatus.SUCCESS;
 	}
 	
 	public void setStatus(ServiceStatus status) {

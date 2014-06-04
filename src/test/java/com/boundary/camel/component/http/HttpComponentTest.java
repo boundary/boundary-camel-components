@@ -1,4 +1,4 @@
-package com.boundary.camel.component.port;
+package com.boundary.camel.component.http;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -13,21 +13,21 @@ import org.junit.Test;
 import com.boundary.camel.component.common.ServiceStatus;
 import com.boundary.camel.component.port.PortInfo;
 
-public class PortComponentTest extends CamelTestSupport {
+public class HttpComponentTest extends CamelTestSupport {
 
     @Test
-    public void testPort() throws Exception {
+    public void testHttp() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:result");
         mock.expectedMessageCount(1);
         mock.await(5, TimeUnit.SECONDS);
         
         mock.assertIsSatisfied();
-//        List <Exchange> receivedExchanges = mock.getReceivedExchanges();
-//        for(Exchange e: receivedExchanges) {
-//        	PortInfo status = e.getIn().getBody(PortInfo.class);
-//        	
-//        	assertTrue("check ping status",status.getStatus() == ServiceStatus.SUCCESS);
-//        }
+        List <Exchange> receivedExchanges = mock.getReceivedExchanges();
+        for(Exchange e: receivedExchanges) {
+        	HttpInfo status = e.getIn().getBody(HttpInfo.class);
+        	
+        	assertTrue("check http status",status.getStatus() == ServiceStatus.SUCCESS);
+        }
     }
     
 
@@ -35,7 +35,7 @@ public class PortComponentTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("port://?host=localhost&delay=5")
+                from("http://foo?host=localhost&delay=5")
                   .to("mock:result");
             }
         };
