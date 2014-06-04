@@ -22,12 +22,6 @@ public class PortComponentTest extends CamelTestSupport {
         mock.await(5, TimeUnit.SECONDS);
         
         mock.assertIsSatisfied();
-//        List <Exchange> receivedExchanges = mock.getReceivedExchanges();
-//        for(Exchange e: receivedExchanges) {
-//        	PortInfo status = e.getIn().getBody(PortInfo.class);
-//        	
-//        	assertTrue("check ping status",status.getStatus() == ServiceStatus.SUCCESS);
-//        }
     }
     
 
@@ -35,7 +29,7 @@ public class PortComponentTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("port://?host=localhost&delay=5")
+                from("port://?host=localhost&port=1234&delay=5")
                   .to("mock:result");
             }
         };

@@ -9,6 +9,7 @@ import org.apache.camel.impl.ScheduledPollEndpoint;
 public class ServiceEndpoint extends ScheduledPollEndpoint {
 	
 	private String host;
+	private int port;
 
 	public ServiceEndpoint() {
 	}
@@ -53,5 +54,17 @@ public class ServiceEndpoint extends ScheduledPollEndpoint {
      */
     public String getHost() {
     	return this.host;
+    }
+    
+    public void setPort(int port) {
+    	this.port = port;
+    }
+    
+    /**
+     * Returns the port of this {@link Endpoint}
+     * @return
+     */
+    public int getPort() {
+    	return this.port;
     }
 }
