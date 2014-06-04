@@ -1,4 +1,4 @@
-package com.boundary.camel.component.ping;
+package com.boundary.camel.component.port;
 
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
@@ -7,18 +7,18 @@ import org.apache.camel.Producer;
 import com.boundary.camel.component.common.ServiceEndpoint;
 
 /**
- * Implements a Camel {@link Endpoint} to ping a host
+ * Implements a Camel {@link Endpoint} to check a port
  */
-public class PingEndpoint extends ServiceEndpoint {
+public class PortEndpoint extends ServiceEndpoint {
 	
-    public PingEndpoint() {
+    public PortEndpoint() {
     }
 
-    public PingEndpoint(String uri, PingComponent component) {
+    public PortEndpoint(String uri, PortComponent component) {
         super(uri, component);
      }
 
-	public PingEndpoint(String endpointUri) {
+	public PortEndpoint(String endpointUri) {
         super(endpointUri);
     }
     
@@ -26,11 +26,11 @@ public class PingEndpoint extends ServiceEndpoint {
      * Creates the producer for the component.
      */
     public Producer createProducer() throws Exception {
-        return new PingProducer(this);
+        return new PortProducer(this);
     }
 
     public Consumer createConsumer(Processor processor) throws Exception {
-    	PingConsumer consumer = new PingConsumer(this, processor);
+    	PortConsumer consumer = new PortConsumer(this, processor);
         return consumer;
     }
 

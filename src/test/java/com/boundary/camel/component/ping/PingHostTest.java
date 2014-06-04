@@ -9,8 +9,8 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
-import com.boundary.camel.component.ping.PingStatus;
-import com.boundary.camel.component.ping.Status;
+import com.boundary.camel.component.common.ServiceStatus;
+import com.boundary.camel.component.ping.PingInfo;
 
 public class PingHostTest extends CamelTestSupport {
 
@@ -24,11 +24,11 @@ public class PingHostTest extends CamelTestSupport {
 
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
-        	PingStatus status = e.getIn().getBody(PingStatus.class);
+        	PingInfo status = e.getIn().getBody(PingInfo.class);
         	
         	assertTrue("check transmitted",status.getTransmitted() > 0);
         	assertEquals("check transmitted/received", status.getTransmitted(),status.getReceived());
-        	assertTrue("check ping satus",status.getStatus() == Status.SUCCESS);
+        	assertTrue("check ping satus",status.getStatus() == ServiceStatus.SUCCESS);
         }
     }
     
@@ -36,8 +36,7 @@ public class PingHostTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("ping://?type=ping&delay=5&host=localhost")
-                  .to("ping://bar")
+                from("ping://?delay=5&host=localhost")
                   .to("mock:result");
             }
         };

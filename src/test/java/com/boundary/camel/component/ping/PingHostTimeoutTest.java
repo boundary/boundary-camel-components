@@ -11,8 +11,8 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
-import com.boundary.camel.component.ping.PingStatus;
-import com.boundary.camel.component.ping.Status;
+import com.boundary.camel.component.common.ServiceStatus;
+import com.boundary.camel.component.ping.PingInfo;
 
 public class PingHostTimeoutTest extends CamelTestSupport {
 
@@ -26,11 +26,11 @@ public class PingHostTimeoutTest extends CamelTestSupport {
         
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
-        	PingStatus status = e.getIn().getBody(PingStatus.class);
+        	PingInfo status = e.getIn().getBody(PingInfo.class);
         	
         	assertTrue("check transmitted",status.getTransmitted() > 0);
         	assertTrue("check received",status.getReceived() == 0);
-        	assertTrue(status.getStatus() == Status.FAIL);
+        	assertTrue(status.getStatus() == ServiceStatus.FAIL);
         }
     }
     
@@ -38,8 +38,7 @@ public class PingHostTimeoutTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("ping://?type=ping&delay=5&host=192.168.1.27")
-                  .to("ping://bar")
+                from("ping://?delay=5&host=192.168.1.27")
                   .to("mock:result");
             }
         };

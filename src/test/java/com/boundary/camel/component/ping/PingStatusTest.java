@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.boundary.camel.component.ping.PingStatus;
+import com.boundary.camel.component.ping.PingInfo;
 
 /**
  * @author davidg
@@ -20,7 +20,7 @@ import com.boundary.camel.component.ping.PingStatus;
  */
 public class PingStatusTest {
 	
-	private PingStatus status;
+	private PingInfo info;
 
 	/**
 	 * @throws java.lang.Exception
@@ -42,7 +42,7 @@ public class PingStatusTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		status = new PingStatus();
+		info = new PingInfo();
 	}
 
 	/**
@@ -55,33 +55,34 @@ public class PingStatusTest {
 	@Test
 	public void testHost() {
 		String expectedHost = "localhost";
-		status.setHost(expectedHost);
-		assertEquals("Check host",expectedHost,status.getHost());
+		info.setHost(expectedHost);
+		assertEquals("Check host",expectedHost,info.getHost());
 	}
 
 	@Test
 	public void testTransmitted() {
 		int expectedTransmitted = 100;
-		status.setTransmitted(expectedTransmitted);
-		assertEquals("Check transmitted", expectedTransmitted, status.getTransmitted());;
+		info.setTransmitted(expectedTransmitted);
+		assertEquals("Check transmitted", expectedTransmitted, info.getTransmitted());;
 	}
 	@Test
 	public void testReceived() {
 		int expectedReceived = 100;
-		status.setReceived(expectedReceived);
-		assertEquals("Check transmitted", expectedReceived, status.getReceived());
+		info.setReceived(expectedReceived);
+		assertEquals("Check transmitted", expectedReceived, info.getReceived());
 	}
 	@Test
 	public void testTTL() {
 		int expectedTTL = 100;
-		status.setTTL(expectedTTL);
+		info.setTTL(expectedTTL);
+		assertEquals("Check TTL", expectedTTL, info.getTTL());
 	}
 	
 	@Test
 	public void testTime() {
 		double expectedTime = 123.45;
-		status.setTime(expectedTime);
-		assertEquals("Check Time", expectedTime,status.getTime(),0.0);
+		info.setTime(expectedTime);
+		assertEquals("Check Time", expectedTime,info.getTime(),0.0);
 	}
 	
 	@Ignore("Not implemented")
@@ -92,25 +93,25 @@ public class PingStatusTest {
 	@Test
 	public void testRTTMin() {
 		double expectedRTTMin = 123.45;
-		status.setRTTMin(expectedRTTMin);
-		assertEquals("Check RTTMin", expectedRTTMin,status.getRTTMin(),0.0);
+		info.setRTTMin(expectedRTTMin);
+		assertEquals("Check RTTMin", expectedRTTMin,info.getRTTMin(),0.0);
 	}
 	@Test
 	public void testRTTAvg() {
 		double expectedRTTAvg = 123.45;
-		status.setRTTAvg(expectedRTTAvg);
-		assertEquals("Check Time", expectedRTTAvg,status.getRTTAvg(),0.0);
+		info.setRTTAvg(expectedRTTAvg);
+		assertEquals("Check Time", expectedRTTAvg,info.getRTTAvg(),0.0);
 	}
 	@Test
 	public void testRTTMax() {
 		double expectedRTTMax = 123.45;
-		status.setRTTMax(expectedRTTMax);
-		assertEquals("Check Time", expectedRTTMax,status.getRTTMax(),0.0);
+		info.setRTTMax(expectedRTTMax);
+		assertEquals("Check Time", expectedRTTMax,info.getRTTMax(),0.0);
 	}
 	@Test
 	public void testRTTMDev() {
 		double expectedRTTMDev = 123.45;
-		status.setRTTMDev(expectedRTTMDev);
-		assertEquals("Check Time", expectedRTTMDev,status.getRTTMDev(),0.0);
+		info.setRTTMDev(expectedRTTMDev);
+		assertEquals("Check Time", expectedRTTMDev,info.getRTTMDev(),0.0);
 	}
 }

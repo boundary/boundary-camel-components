@@ -1,4 +1,4 @@
-package com.boundary.camel.component.ping;
+package com.boundary.camel.component.port;
 
 import java.util.Date;
 
@@ -10,21 +10,21 @@ import org.apache.camel.impl.ScheduledPollConsumer;
 /**
  * The Ping consumer.
  */
-public class PingConsumer extends ScheduledPollConsumer {
-    private final PingEndpoint endpoint;
+public class PortConsumer extends ScheduledPollConsumer {
+    private final PortEndpoint endpoint;
 
-    public PingConsumer(PingEndpoint endpoint, Processor processor) {
+    public PortConsumer(PortEndpoint endpoint, Processor processor) {
         super(endpoint, processor);
         this.endpoint = endpoint;
     }
     
-    protected PingInfo executePingCheck() {
-    	PingCheck pingCheck = new PingCheck();
+    protected PortInfo executePortCheck() {
+    	PortCheck portCheck = new PortCheck();
     	
     	// TBD: Set this during initialization
-    	pingCheck.setHost(endpoint.getHost());
+    	portCheck.setHost(endpoint.getHost());
     	
-    	return pingCheck.performCheck();
+    	return portCheck.performCheck();
     }
     
 	@Override
@@ -32,15 +32,10 @@ public class PingConsumer extends ScheduledPollConsumer {
 
 		Exchange exchange = endpoint.createExchange();
 		Message message = exchange.getIn();
-
-		// Perform the health check on the host/service by
-		// 1) Running the Ping command
-		// 2) Attempting to connect to a socket on a port in the host
-		// 3) Making an HTTP(s) call to an endpoint
 		
-		PingInfo status = executePingCheck();
+		PortInfo status = executePortCheck();
 
-		message.setBody(status, PingInfo.class);
+		message.setBody(status, PortInfo.class);
 
 		try {
 			// send message to next processor in the route

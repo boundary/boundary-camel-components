@@ -9,8 +9,8 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
-import com.boundary.camel.component.ping.PingStatus;
-import com.boundary.camel.component.ping.Status;
+import com.boundary.camel.component.common.ServiceStatus;
+import com.boundary.camel.component.ping.PingInfo;
 
 public class PingComponentTest extends CamelTestSupport {
 
@@ -23,11 +23,11 @@ public class PingComponentTest extends CamelTestSupport {
         mock.assertIsSatisfied();
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
-        	PingStatus status = e.getIn().getBody(PingStatus.class);
+        	PingInfo status = e.getIn().getBody(PingInfo.class);
         	
          	assertTrue("check transmitted",status.getTransmitted() > 0);
         	assertEquals("check transmitted/received", status.getTransmitted(),status.getReceived());
-           	assertTrue("check ping status",status.getStatus() == Status.SUCCESS);
+           	assertTrue("check ping status",status.getStatus() == ServiceStatus.SUCCESS);
         }
     }
     
@@ -40,11 +40,11 @@ public class PingComponentTest extends CamelTestSupport {
         mock.assertIsSatisfied();
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
-        	PingStatus status = e.getIn().getBody(PingStatus.class);
+        	PingInfo status = e.getIn().getBody(PingInfo.class);
         	
         	assertTrue("check transmitted",status.getTransmitted() > 0);
         	assertEquals("check transmitted/received", status.getTransmitted(),status.getReceived());
-        	assertTrue("check ping status",status.getStatus() == Status.SUCCESS);
+        	assertTrue("check ping status",status.getStatus() == ServiceStatus.SUCCESS);
         }
 
     }
@@ -54,7 +54,6 @@ public class PingComponentTest extends CamelTestSupport {
         return new RouteBuilder() {
             public void configure() {
                 from("ping://foo?host=localhost&delay=5")
-                  .to("ping://bar")
                   .to("mock:result");
             }
         };

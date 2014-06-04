@@ -13,11 +13,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.boundary.camel.component.common.ServiceInfo;
+import com.boundary.camel.component.common.ServiceStatus;
 
 /**
  * Implements a service check by using the ping command found in most *inix environments
@@ -27,13 +31,13 @@ import org.slf4j.LoggerFactory;
  * @author davidg
  *
  */
-public class PingCheck implements ServiceCheck {
+public class PingCheck extends ServiceCheck {
 	
     private static final Logger LOG = LoggerFactory.getLogger(PingCheck.class);
 
 	private long waitTime;
 	private long packetSize;
-	private String host;
+
 	
 	private String pingCommand = null;
 	
@@ -46,12 +50,11 @@ public class PingCheck implements ServiceCheck {
 
 
 	public PingCheck() {
-		// Set default host
-		host = "localhost";
+
 	}
 
-	public PingStatus performCheck() {
-		PingStatus status;
+	public PingInfo performCheck() {
+		PingInfo status;
 
 		status = executeCheck();
 
@@ -163,15 +166,15 @@ public class PingCheck implements ServiceCheck {
 	 * @param lines
 	 * @return PingSTatus
 	 */
-	protected PingStatus parse(int exitValue, List<String> outLines,
+	protected PingInfo parse(int exitValue, List<String> outLines,
 			List<String> errLines) {
-		PingStatus status = new PingStatus();
+		PingInfo info = new PingInfo();
 		Pattern roundTripTimePat = Pattern.compile(RTT_REG_EX);
 		Pattern transmitReceivePat = Pattern.compile(TRANSMITTED_RECEIVED_REG_EX);
 		Pattern noRouteToHostPat = Pattern.compile(NO_ROUTE_TO_HOST_REG_EX);
 		Pattern unknownHostPat = Pattern.compile(UNKNOWN_HOST_REG_EX);
 
-		status.setHost(getHost());
+		info.setHost(getHost());
 
 		// Parse the output based on exit value of ping
 		switch (exitValue) {
@@ -182,27 +185,27 @@ public class PingCheck implements ServiceCheck {
 			for (String line : outLines) {
 				Matcher matcher = roundTripTimePat.matcher(line);
 				if (matcher.find()) {
-					status.setRTTMin(Double.parseDouble(matcher.group(1)));
-					status.setRTTAvg(Double.parseDouble(matcher.group(2)));
-					status.setRTTMax(Double.parseDouble(matcher.group(3)));
-					status.setRTTMDev(Double.parseDouble(matcher.group(4)));
+					info.setRTTMin(Double.parseDouble(matcher.group(1)));
+					info.setRTTAvg(Double.parseDouble(matcher.group(2)));
+					info.setRTTMax(Double.parseDouble(matcher.group(3)));
+					info.setRTTMDev(Double.parseDouble(matcher.group(4)));
 				}
 			}
 			// Extract the transmit and received counts
 			for (String line : outLines) {
 				Matcher matcher = transmitReceivePat.matcher(line);
 				if (matcher.find()) {
-					status.setTransmitted(Integer.parseInt(matcher.group(1)));
-					status.setReceived(Integer.parseInt(matcher.group(2)));
+					info.setTransmitted(Integer.parseInt(matcher.group(1)));
+					info.setReceived(Integer.parseInt(matcher.group(2)));
 				}
 			}
 			
 			// If no ICMP packages are returned then consider the test failed
-			if (status.getReceived() == 0) {
-				status.setStatus(Status.FAIL);
+			if (info.getReceived() == 0) {
+				info.setStatus(ServiceStatus.FAIL);
 			}
 			else {
-				status.setStatus(Status.SUCCESS);
+				info.setStatus(ServiceStatus.SUCCESS);
 			}
 			break;
 		// Error case: 1) Unable to resolve host ; 2) Host unreachable
@@ -212,29 +215,29 @@ public class PingCheck implements ServiceCheck {
 			for (String line : outLines) {
 				Matcher matcher = transmitReceivePat.matcher(line);
 				if (matcher.find()) {
-					status.setTransmitted(Integer.parseInt(matcher.group(1)));
-					status.setReceived(Integer.parseInt(matcher.group(2)));
+					info.setTransmitted(Integer.parseInt(matcher.group(1)));
+					info.setReceived(Integer.parseInt(matcher.group(2)));
 				}
 			}
 			
 			for (String line: errLines) {
 				Matcher matcher = unknownHostPat.matcher(line);
 				if (matcher.find()) {
-					status.setMessage(matcher.group(1));
+					info.setMessage(matcher.group(1));
 				}
 			}
 			
-			status.setStatus(Status.FAIL);
+			info.setStatus(ServiceStatus.FAIL);
 			break;
 		default:
 			assert false: "Unknown exit code";
 		}
 
-		return status;
+		return info;
 	}
 
-	protected PingStatus executeCheck() {
-		PingStatus status = null;
+	protected PingInfo executeCheck() {
+		PingInfo info = null;
 		
 		LOG.debug("executeCheck()");
 
@@ -262,12 +265,12 @@ public class PingCheck implements ServiceCheck {
 			int exitValue = executor.execute(commandLine);
 			List<String> outLines = getStringOutput(out);
 			List<String> errLines = getStringOutput(err);
- 			status = parse(exitValue,outLines,errLines);
+ 			info = parse(exitValue,outLines,errLines);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return status;
+		return info;
 	}
 
 	/**
@@ -288,13 +291,5 @@ public class PingCheck implements ServiceCheck {
 
 	public long getPacketSize() {
 		return this.packetSize;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	public String getHost() {
-		return this.host;
 	}
 }
