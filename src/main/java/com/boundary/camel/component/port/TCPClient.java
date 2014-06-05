@@ -16,63 +16,46 @@ import com.boundary.camel.component.ping.PingCheck;
 /**
  * Implements a client socket connection to host and port.
  * 
+ * The client can be configured and invoked in several different ways:
+ * <pre>
+ * 
+ *    TCPClient client = new TCPClient();
+ *    client.connect(); // Use defaults of host, port, and time out.
+ *    
+ *    ....
+ *    
+ *    TCPClient client = new TCPClient("myhost",1234,5000);
+ *    client.connect();
+ *    
+ *    ...
+ *    
+ *    TCPClient client = new TCPClient();
+ *    client.setHost("myhost");
+ *    client.setPort(1234);
+ *    client.setTimeout(5000);
+ *    client.connect();
+ *    
+ *    ...
+ *    
+ *    TCPClient client = new TCPClient();
+ *    client.connect("myhost",1234,5000);
+ *    
+ *    ...
+ *    
+ *    // NOTE: Any parameter specificed in the connect method will set its corresponding member variable.
+ * </pre>
+ * 
  * @author davidg
  * 
  */
 public class TCPClient {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TCPClient.class);
-
-	private static final String DEFAULT_HOST = "localhost";
-	private static final int DEFAULT_PORT = 7;
-	private static final int DEFAULT_TIME_OUT = 5000;
-
-	private String host;
-	private int port;
-	private Socket sock;
-	private int timeOut;
+	
 	private PortStatus status;
 	private String message;
 
 	public TCPClient() {
-		this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_TIME_OUT);
-	}
-
-	public TCPClient(String host, int port) {
-		this(host, port, DEFAULT_TIME_OUT);
-	}
-
-	/**
-	 * Constructor the {@link TCPClient} instance
-	 */
-	public TCPClient(String host, int port, int timeOut) {
-		this.sock = new Socket();
-		this.timeOut = timeOut;
-		this.host = host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	public String getHost() {
-		return this.host;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	public int getPort() {
-		return this.port;
-	}
-
-	public void setTimeout(int timeOut) {
-		this.timeOut = timeOut;
-	}
-
-	public int getTimeout() {
-		return this.timeOut;
 	}
 
 	public String getMessage() {
@@ -92,8 +75,9 @@ public class TCPClient {
 	 * Attempt a connection to the host and port.
 	 * 
 	 */
-	public void connect() {
+	public void connect(String host, int port, int timeOut) {
 		InetSocketAddress address = new InetSocketAddress(host, port);
+		Socket sock = new Socket();
 
 		try {
 			sock.connect(address, timeOut);
@@ -134,8 +118,8 @@ public class TCPClient {
 	}
 
 	public static void main(String[] args) {
-		TCPClient client = new TCPClient("localhost", 1234, 5000);
-		client.connect();
+		TCPClient client = new TCPClient();
+		client.connect("localhost", 1234, 5000);
 		System.out.println("status: " + client.getStatus());
 	}
 
@@ -147,5 +131,9 @@ public class TCPClient {
 			s.append("at " + element.toString() + "\n");
 		}
 		LOG.debug(s.toString());
+	}
+
+	public static TCPClient setUpDefaultClient() {
+		return new TCPClient();
 	}
 }

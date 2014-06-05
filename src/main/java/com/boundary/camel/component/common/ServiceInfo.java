@@ -16,7 +16,9 @@ public class ServiceInfo {
 		status = ServiceStatus.SUCCESS;
 	}
 	
-	public void setStatus(ServiceStatus status) {}
+	public void setStatus(ServiceStatus status) {
+		this.status = status;
+	}
 	
 	public ServiceStatus getStatus() {
 		return this.status;

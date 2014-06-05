@@ -4,6 +4,7 @@ import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.spi.UriParam;
+import org.apache.camel.spi.UriEndpoint;
 
 import com.boundary.camel.component.common.ServiceEndpoint;
 import com.boundary.camel.component.common.ServiceStatus;
@@ -12,6 +13,7 @@ import com.boundary.camel.component.port.PortConfiguration;
 /**
  * Implements a Camel {@link Endpoint} to check a port
  */
+@UriEndpoint(scheme = "port", consumerClass = PortConsumer.class)
 public class PortEndpoint extends ServiceEndpoint {
 	
 	private TCPClient client;
@@ -19,18 +21,23 @@ public class PortEndpoint extends ServiceEndpoint {
     @UriParam
     private PortConfiguration portConfiguration;
 
-	
     public PortEndpoint() {
     	client = new TCPClient();
+    }
+
+	public PortEndpoint(String endpointUri) {
+        super(endpointUri);
     }
 
     public PortEndpoint(String uri, PortComponent component) {
         super(uri, component);
      }
 
-	public PortEndpoint(String endpointUri) {
-        super(endpointUri);
+    public PortEndpoint(String uri, PortComponent component, PortConfiguration configuration) {
+        super(uri, component);
+        this.portConfiguration = configuration;
     }
+
     
     /**
      * Creates the producer for the component.
@@ -41,36 +48,48 @@ public class PortEndpoint extends ServiceEndpoint {
 
     public Consumer createConsumer(Processor processor) throws Exception {
     	PortConsumer consumer = new PortConsumer(this, processor);
+        configureConsumer(consumer);
         return consumer;
     }
 
     public boolean isSingleton() {
-        return true;
+        return false;
     }
     
-    public void setConfiguration(PortConfiguration portConfiguration) {
-    	this.portConfiguration = portConfiguration;
+    public void setConfiguration(PortConfiguration configuration) {
+    	this.portConfiguration = configuration;
     }
     
     public PortConfiguration getConfiguration() {
     	return this.portConfiguration;
     }
     
-    public void setClientConfiguration(TCPClient client, PortConfiguration portConfiguration) {
-    	client.setHost(portConfiguration.getHost());
-    	client.setPort(portConfiguration.getPort());
-    	client.setTimeout(portConfiguration.getTimeout());
+    @Override
+    protected void doStart() throws Exception {
+        super.doStart();
+
+        client = TCPClient.setUpDefaultClient();
     }
     
-    public void setPortInfo(PortInfo info,TCPClient client) {
+    @Override
+    protected void doStop() throws Exception {
+        if (client != null) {
+            client = null;
+        }
+
+        super.doStop();
+    }
+
+    public void setPortInfo(PortInfo info,PortConfiguration configuration,TCPClient client) {
     	
-    	info.setHost(client.getHost());
-    	info.setPort(client.getPort());
+    	info.setHost(configuration.getHost());
+    	info.setPort(configuration.getPort());
     	info.setMessage(client.getMessage());
     	
     	switch(client.getStatus()) {
     	case CONNECTED:
     		info.setStatus(ServiceStatus.SUCCESS);
+    		break;
     	case CONNECTION_REFUSED:
     	case SOCKET_TIMEOUT:
     	case UNKNOWN_HOST:
@@ -85,9 +104,10 @@ public class PortEndpoint extends ServiceEndpoint {
     public PortInfo performCheck() {
     	PortInfo info = new PortInfo();
     	
-    	setClientConfiguration(client,getConfiguration());
-    	client.connect();
-    	setPortInfo(info,client);
+    	PortConfiguration configuration = getConfiguration();
+    	client.connect(configuration.getHost(),configuration.getPort(),configuration.getTimeout());
+    	
+    	setPortInfo(info,configuration,client);
     	
     	return info;
     }

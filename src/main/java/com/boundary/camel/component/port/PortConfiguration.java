@@ -1,19 +1,58 @@
 package com.boundary.camel.component.port;
 
+import java.net.URI;
+
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.spi.UriParam;
 import org.apache.camel.spi.UriParams;
 
 @UriParams
 public class PortConfiguration implements Cloneable {
+
+	private static final String DEFAULT_HOST = "localhost";
+	private static final int DEFAULT_PORT = 7;
+	private static final int DEFAULT_TIMEOUT = 5000;
 	
     @UriParam
-    private String host;
+    private String host = DEFAULT_HOST;
     
     @UriParam
-    private int port;
+    private int port = DEFAULT_PORT;
     
     @UriParam
-    private int timeOut;
+    private int timeOut = DEFAULT_TIMEOUT;
+    
+	private String path;
+    
+    public PortConfiguration() {
+    }
+    
+    public PortConfiguration(URI uri) {
+        configure(uri);
+    }
+
+    public void configure(URI uri) {
+        // UserInfo can contain both username and password as: user:pwd@sshserver
+        // see: http://en.wikipedia.org/wiki/URI_scheme
+
+        setHost(uri.getHost());
+
+        // URI.getPort returns -1 if port not defined, else use default port
+        int uriPort = uri.getPort();
+        if (uriPort != -1) {
+            setPort(uriPort);
+        }
+        setPath(uri.getPath());
+    }
+
+    public PortConfiguration copy() {
+        try {
+            return (PortConfiguration) clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeCamelException(e);
+        }
+    }
+
 
     public void setHost(String host) {
     	this.host = host;
@@ -37,6 +76,24 @@ public class PortConfiguration implements Cloneable {
 
 	public int getTimeout() {
 		return this.timeOut;
+	}
+	
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
+	public String getPath() {
+		return this.path;
+	}
+	
+	public String toString() {
+		StringBuffer s = new StringBuffer();
+		
+		s.append("host=" + host);
+		s.append(",port=" + port);
+		s.append(",timeout=" + timeOut);
+		
+		return s.toString();
 	}
 }
 

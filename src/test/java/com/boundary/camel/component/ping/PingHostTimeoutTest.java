@@ -20,7 +20,7 @@ public class PingHostTimeoutTest extends CamelTestSupport {
     public void testPing() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:result");
         mock.expectedMinimumMessageCount(1);
-        mock.await(10, TimeUnit.SECONDS);
+        mock.await(15, TimeUnit.SECONDS);
         
         mock.assertIsSatisfied();
         

@@ -21,20 +21,4 @@ public class PortCheck extends ServiceCheck {
 		PortInfo status = new PortInfo();
 		return status;
 	}
-	
-	public void setPort(int port) {
-		client.setPort(port);
-	}
-	
-	public int getPort() {
-		return client.getPort();
-	}
-	
-	public void setTimeout(int timeOut) {
-		this.timeOut = timeOut;
-	}
-	
-	public int getTimeout() {
-		return this.timeOut;
-	}
 }
