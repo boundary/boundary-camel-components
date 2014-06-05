@@ -9,7 +9,13 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class MultiThreadedServer implements Runnable {
+	
+    private static final Logger LOG = LoggerFactory.getLogger(MultiThreadedServer.class);
 
 	private int port;
 	private int maxConnections;
@@ -31,23 +37,9 @@ public class MultiThreadedServer implements Runnable {
 	
 	public void stop() throws IOException {
 		
-		listener.close();
-		
-//	    int nAlloc = threadGroup.activeCount();
-//	    System.out.println("Attemping to stop " + nAlloc + " threads");
-//	    int n = 0;
-//
-//	    Thread[] threads;
-//	    do {
-//	        nAlloc *= 2;
-//	        threads = new Thread[ nAlloc ];
-//	        n = threadGroup.enumerate( threads );
-//	    } while ( n == nAlloc );
-//	    
-//	    for (Thread t : threads) {
-//	    	System.out.println("interuppting thread: " + t.getName());
-//	    	t.interrupt();
-//	    }
+		if (listener != null) {
+			listener.close();
+		}
 	}
 	
 
@@ -66,8 +58,7 @@ public class MultiThreadedServer implements Runnable {
 				t.start();
 			}
 		} catch (Exception ioe) {
-			System.out.println("IOException on socket listen: " + ioe);
-			ioe.printStackTrace();
+			LOG.info("IOException on socket listen: " + ioe);
 		}
 	}
 	
