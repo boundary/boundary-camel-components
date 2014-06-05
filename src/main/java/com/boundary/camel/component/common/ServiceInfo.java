@@ -7,13 +7,13 @@ package com.boundary.camel.component.common;
  */
 public class ServiceInfo {
 	
-	private ServiceStatus status;
-	private String message;
-	private String host;
-	private int port;
+	private ServiceStatus status = ServiceStatus.SUCCESS;
+	private String message = "OK";
+	private String host = "localhost";
+	private int port = 7;
+	private int timeOut = 5000;
 	
 	public ServiceInfo() {
-		status = ServiceStatus.SUCCESS;
 	}
 	
 	public void setStatus(ServiceStatus status) {
@@ -46,6 +46,14 @@ public class ServiceInfo {
 	
 	public int getPort() {
 		return this.port;
+	}
+
+	public void setTimeout(int timeOut) {
+		this.timeOut = timeOut;
+	}
+	
+	public int getTimeout() {
+		return this.timeOut;
 	}
 
 
