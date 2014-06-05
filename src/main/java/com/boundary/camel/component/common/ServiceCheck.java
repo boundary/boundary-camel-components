@@ -1,4 +1,4 @@
-package com.boundary.camel.component.ping;
+package com.boundary.camel.component.common;
 
 /**
  * Interface to that defines service checks.

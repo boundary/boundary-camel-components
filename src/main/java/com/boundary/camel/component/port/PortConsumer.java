@@ -18,22 +18,13 @@ public class PortConsumer extends ScheduledPollConsumer {
         this.endpoint = endpoint;
     }
     
-    protected PortInfo executePortCheck() {
-    	PortCheck portCheck = new PortCheck();
-    	
-    	// TBD: Set this during initialization
-    	portCheck.setHost(endpoint.getHost());
-    	
-    	return portCheck.performCheck();
-    }
-    
 	@Override
 	protected int poll() throws Exception {
 
 		Exchange exchange = endpoint.createExchange();
 		Message message = exchange.getIn();
 		
-		PortInfo status = executePortCheck();
+		PortInfo status = endpoint.performCheck();
 
 		message.setBody(status, PortInfo.class);
 

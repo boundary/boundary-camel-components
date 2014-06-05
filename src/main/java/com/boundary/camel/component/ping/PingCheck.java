@@ -20,6 +20,7 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.boundary.camel.component.common.ServiceCheck;
 import com.boundary.camel.component.common.ServiceInfo;
 import com.boundary.camel.component.common.ServiceStatus;
 

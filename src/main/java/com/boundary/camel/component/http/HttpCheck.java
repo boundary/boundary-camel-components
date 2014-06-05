@@ -1,6 +1,6 @@
 package com.boundary.camel.component.http;
 
-import com.boundary.camel.component.ping.ServiceCheck;
+import com.boundary.camel.component.common.ServiceCheck;
 
 public class HttpCheck extends ServiceCheck {
 	

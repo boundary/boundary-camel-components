@@ -42,7 +42,7 @@ public class TCPClientTest {
 		server.start();
 		TCPClient client = new TCPClient("localhost",LISTENING_PORT);
 		client.connect();
-		assertTrue(client.getStatus() == TCPClientStatus.CONNECTED);
+		assertTrue(client.getStatus() == PortStatus.CONNECTED);
 		server.stop();
 	}
 
@@ -51,20 +51,20 @@ public class TCPClientTest {
 		TCPClient client = new TCPClient("localhost",555);
 		client.connect();
 		System.out.println(client.getStatus());
-		assertTrue(client.getStatus() == TCPClientStatus.CONNECTION_REFUSED);
+		assertTrue(client.getStatus() == PortStatus.CONNECTION_REFUSED);
 	}
 	
 	@Test
 	public void testUnknownHost() {
 		TCPClient client = new TCPClient("foobar",1234);
 		client.connect();
-		assertTrue(client.getStatus() == TCPClientStatus.UNKNOWN_HOST);
+		assertTrue(client.getStatus() == PortStatus.UNKNOWN_HOST);
 	}
 	
 	@Test
 	public void testSocketTimeout() {
 		TCPClient client = new TCPClient("10.0.0.0",1234);
 		client.connect();
-		assertTrue(client.getStatus() == TCPClientStatus.SOCKET_TIMEOUT);
+		assertTrue(client.getStatus() == PortStatus.SOCKET_TIMEOUT);
 	}
 }

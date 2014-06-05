@@ -20,65 +20,111 @@ import com.boundary.camel.component.ping.PingCheck;
  * 
  */
 public class TCPClient {
-	
-    private static final Logger LOG = LoggerFactory.getLogger(TCPClient.class);
 
-	public static final int DEFAULT_TIME_OUT=5000;
-	
-	private InetSocketAddress address;
+	private static final Logger LOG = LoggerFactory.getLogger(TCPClient.class);
+
+	private static final String DEFAULT_HOST = "localhost";
+	private static final int DEFAULT_PORT = 7;
+	private static final int DEFAULT_TIME_OUT = 5000;
+
+	private String host;
+	private int port;
 	private Socket sock;
 	private int timeOut;
-	private TCPClientStatus status;
+	private PortStatus status;
+	private String message;
+
+	public TCPClient() {
+		this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_TIME_OUT);
+	}
+
+	public TCPClient(String host, int port) {
+		this(host, port, DEFAULT_TIME_OUT);
+	}
 
 	/**
 	 * Constructor the {@link TCPClient} instance
 	 */
-	public TCPClient(String host, int port,int timeOut) {
+	public TCPClient(String host, int port, int timeOut) {
 		this.sock = new Socket();
 		this.timeOut = timeOut;
-		this.address = new InetSocketAddress(host,port);
+		this.host = host;
 	}
-	
-	public TCPClient(String host,int port) {
-		this(host,port,DEFAULT_TIME_OUT);
+
+	public void setHost(String host) {
+		this.host = host;
 	}
-	
+
+	public String getHost() {
+		return this.host;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	public int getPort() {
+		return this.port;
+	}
+
+	public void setTimeout(int timeOut) {
+		this.timeOut = timeOut;
+	}
+
+	public int getTimeout() {
+		return this.timeOut;
+	}
+
+	public String getMessage() {
+		return this.message;
+	}
+
+	/**
+	 * Get the results of an attempt to connect to a host and port
+	 * 
+	 * @return {@link PortStatus}
+	 */
+	public PortStatus getStatus() {
+		return status;
+	}
+
 	/**
 	 * Attempt a connection to the host and port.
 	 * 
 	 */
 	public void connect() {
+		InetSocketAddress address = new InetSocketAddress(host, port);
 
 		try {
 			sock.connect(address, timeOut);
 			sock.close();
-			status = TCPClientStatus.CONNECTED;
-		}
-		catch (SocketTimeoutException t) {
+			message = "OK";
+			status = PortStatus.CONNECTED;
+		} catch (SocketTimeoutException t) {
 			printStackTrace(t);
-			status = TCPClientStatus.SOCKET_TIMEOUT;
-		}
-		catch (ConnectException c) {
+			message = t.getMessage();
+			status = PortStatus.SOCKET_TIMEOUT;
+		} catch (ConnectException c) {
 			printStackTrace(c);
-			status = TCPClientStatus.CONNECTION_REFUSED;
-		}
-		catch (UnknownHostException u) {
+			message = c.getMessage();
+			status = PortStatus.CONNECTION_REFUSED;
+		} catch (UnknownHostException u) {
 			printStackTrace(u);
-			status = TCPClientStatus.UNKNOWN_HOST;
-		}
-		catch (IllegalArgumentException a) {
+			message = u.getMessage();
+			status = PortStatus.UNKNOWN_HOST;
+		} catch (IllegalArgumentException a) {
 			printStackTrace(a);
-			status = TCPClientStatus.ERROR;
-		}
-		catch (IllegalBlockingModeException b) {
+			message = a.getMessage();
+			status = PortStatus.ERROR;
+		} catch (IllegalBlockingModeException b) {
 			printStackTrace(b);
-			status = TCPClientStatus.ERROR;
-		}
-		catch (IOException e) {
+			message = b.getMessage();
+			status = PortStatus.ERROR;
+		} catch (IOException e) {
 			printStackTrace(e);
-			status = TCPClientStatus.ERROR;
-		}
-		finally {
+			message = e.getMessage();
+			status = PortStatus.ERROR;
+		} finally {
 			try {
 				sock.close();
 			} catch (IOException e) {
@@ -86,22 +132,13 @@ public class TCPClient {
 			}
 		}
 	}
-	
-	/**
-	 * Get the results of an attempt to connect to a host and port
-	 * 
-	 * @return {@link TCPClientStatus}
-	 */
-	public TCPClientStatus getStatus() {
-		return status;
-	}
 
 	public static void main(String[] args) {
-		TCPClient client = new TCPClient("localhost",1234,5000);
+		TCPClient client = new TCPClient("localhost", 1234, 5000);
 		client.connect();
 		System.out.println("status: " + client.getStatus());
 	}
-	
+
 	private void printStackTrace(Exception e) {
 		StringBuffer s = new StringBuffer();
 		StackTraceElement[] trace = e.getStackTrace();

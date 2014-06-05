@@ -1,6 +1,6 @@
 package com.boundary.camel.component.port;
 
-public enum TCPClientStatus {
+public enum PortStatus {
 	CONNECTED,
 	CONNECTION_REFUSED,
 	ERROR,
