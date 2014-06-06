@@ -85,8 +85,9 @@ public class PortEndpoint extends ServiceEndpoint {
     	info.setHost(configuration.getHost());
     	info.setPort(configuration.getPort());
     	info.setMessage(client.getMessage());
+    	info.setPortStatus(client.getPortStatus());
     	
-    	switch(client.getStatus()) {
+    	switch(client.getPortStatus()) {
     	case CONNECTED:
     		info.setStatus(ServiceStatus.SUCCESS);
     		break;
@@ -97,7 +98,7 @@ public class PortEndpoint extends ServiceEndpoint {
     		info.setStatus(ServiceStatus.FAIL);
     		break;
     	default:
-    		assert false: "PortInfo not set for status: " + client.getStatus();
+    		assert false: "PortInfo not set for status: " + client.getPortStatus();
     	}
     }
     

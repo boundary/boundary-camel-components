@@ -52,7 +52,7 @@ public class TCPClient {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TCPClient.class);
 	
-	private PortStatus status;
+	private PortStatus portStatus;
 	private String message;
 
 	public TCPClient() {
@@ -67,8 +67,8 @@ public class TCPClient {
 	 * 
 	 * @return {@link PortStatus}
 	 */
-	public PortStatus getStatus() {
-		return status;
+	public PortStatus getPortStatus() {
+		return portStatus;
 	}
 
 	/**
@@ -83,31 +83,31 @@ public class TCPClient {
 			sock.connect(address, timeOut);
 			sock.close();
 			message = "OK";
-			status = PortStatus.CONNECTED;
+			portStatus = PortStatus.CONNECTED;
 		} catch (SocketTimeoutException t) {
 			printStackTrace(t);
 			message = t.getMessage();
-			status = PortStatus.SOCKET_TIMEOUT;
+			portStatus = PortStatus.SOCKET_TIMEOUT;
 		} catch (ConnectException c) {
 			printStackTrace(c);
 			message = c.getMessage();
-			status = PortStatus.CONNECTION_REFUSED;
+			portStatus = PortStatus.CONNECTION_REFUSED;
 		} catch (UnknownHostException u) {
 			printStackTrace(u);
 			message = u.getMessage();
-			status = PortStatus.UNKNOWN_HOST;
+			portStatus = PortStatus.UNKNOWN_HOST;
 		} catch (IllegalArgumentException a) {
 			printStackTrace(a);
 			message = a.getMessage();
-			status = PortStatus.ERROR;
+			portStatus = PortStatus.ERROR;
 		} catch (IllegalBlockingModeException b) {
 			printStackTrace(b);
 			message = b.getMessage();
-			status = PortStatus.ERROR;
+			portStatus = PortStatus.ERROR;
 		} catch (IOException e) {
 			printStackTrace(e);
 			message = e.getMessage();
-			status = PortStatus.ERROR;
+			portStatus = PortStatus.ERROR;
 		} finally {
 			try {
 				sock.close();
@@ -120,7 +120,7 @@ public class TCPClient {
 	public static void main(String[] args) {
 		TCPClient client = new TCPClient();
 		client.connect("localhost", 1234, 5000);
-		System.out.println("status: " + client.getStatus());
+		System.out.println("status: " + client.getPortStatus());
 	}
 
 	private void printStackTrace(Exception e) {

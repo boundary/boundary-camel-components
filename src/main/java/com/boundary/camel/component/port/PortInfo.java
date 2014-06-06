@@ -7,7 +7,6 @@ public class PortInfo extends ServiceInfo {
 	private PortStatus portStatus;
 
 	PortInfo() {
-		portStatus = PortStatus.CONNECTED;
 	}
 
 	public void setPortStatus(PortStatus portStatus) {
