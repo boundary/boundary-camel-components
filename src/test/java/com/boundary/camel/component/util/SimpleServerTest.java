@@ -35,7 +35,6 @@ public class SimpleServerTest {
 		InetSocketAddress address = new InetSocketAddress("localhost", port);
 		try {
 			sock.connect(address, timeOut);
-			System.out.println("Connected");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
