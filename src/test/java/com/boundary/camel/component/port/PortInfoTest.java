@@ -34,8 +34,7 @@ public class PortInfoTest {
 		assertEquals("check host","localhost",info.getHost());
 		assertEquals("check port",7,info.getPort());
 		assertEquals("check timeout",5000,info.getTimeout()); 
-		assertTrue("check port status",PortStatus.CONNECTED == info.getPortStatus());
-
+		assertNull("check port status",info.getPortStatus());
 	}
 
 	@Test
@@ -98,6 +97,6 @@ public class PortInfoTest {
 	@Test
 	public void testToString() {
 		PortInfo info = new PortInfo();
-		assertEquals("check toString()","host=localhost,port=7,timeout=5000,portStatus=CONNECTED",info.toString());
+		assertEquals("check toString()","host=localhost,port=7,timeout=5000,portStatus=",info.toString());
 	}
 }

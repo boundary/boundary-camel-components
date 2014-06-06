@@ -23,9 +23,8 @@ public class PortInfo extends ServiceInfo {
 		s.append("host=" + getHost());
 		s.append(",port=" + getPort());
 		s.append(",timeout=" + getTimeout());
-		s.append(",portStatus=" + getPortStatus().toString());
+		s.append(",portStatus=" + (getPortStatus() == null ? "" : getPortStatus().toString()));
 		
 		return s.toString();
-
 	}
 }
