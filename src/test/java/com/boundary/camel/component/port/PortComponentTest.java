@@ -20,8 +20,6 @@ import org.junit.Test;
 import com.boundary.camel.component.common.ServiceStatus;
 import com.boundary.camel.component.ping.PingInfo;
 import com.boundary.camel.component.port.PortInfo;
-import com.boundary.camel.component.util.MultiThreadedServer;
-import com.boundary.camel.component.util.Server;
 import com.boundary.camel.component.util.SimpleServer;
 
 public class PortComponentTest extends CamelTestSupport {
@@ -59,7 +57,6 @@ public class PortComponentTest extends CamelTestSupport {
 		mock.assertIsSatisfied();
 	}
 
-	//@Ignore
 	@Test
 	public void testConnect() {
 		// Start TCP server
