@@ -15,7 +15,6 @@ public class SimpleServer extends Thread {
 	public final static int DEFAULT_PORT = 6789;
 	protected int port;
 	protected ServerSocket listen_socket;
-	List<Connection> connectionList;
 
 	/**
 	 * Helper function to output an error
@@ -34,7 +33,6 @@ public class SimpleServer extends Thread {
 	 * @param port Number of the listening port
 	 */
 	public SimpleServer(int port) {
-		connectionList = new ArrayList<Connection>();
 		if (port == 0)
 			port = DEFAULT_PORT;
 		this.port = port;
