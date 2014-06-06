@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.boundary.camel.component.util.MultiThreadedServer;
+import com.boundary.camel.component.util.SimpleServer;
 
 public class TCPClientTest {
 	
@@ -18,7 +18,7 @@ public class TCPClientTest {
 	private final static int LISTENING_PORT = 5555;
 	private final static int TIMEOUT = 5000;
 	
-	MultiThreadedServer server;
+
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -40,15 +40,14 @@ public class TCPClientTest {
 	
 	@Test
 	public void testConnect() throws Exception {
-		server = new MultiThreadedServer(LISTENING_PORT,1);
-		server.start();
+		SimpleServer server = new SimpleServer(LISTENING_PORT);
 		
 		TCPClient client = new TCPClient();
 		client.connect("localhost",LISTENING_PORT,TIMEOUT);
 		
 		assertTrue(client.getPortStatus() == PortStatus.CONNECTED);
 		
-		server.stop();
+		server.stopServer();
 	}
 
 	@Test
