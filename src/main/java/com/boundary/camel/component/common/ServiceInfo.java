@@ -1,5 +1,7 @@
 package com.boundary.camel.component.common;
 
+import java.util.Date;
+
 /**
  * 
  * @author davidg
@@ -12,6 +14,7 @@ public class ServiceInfo {
 	private String host = "localhost";
 	private int port = 7;
 	private int timeOut = 5000;
+	private Date timeStamp = new Date();
 	
 	public ServiceInfo() {
 	}
@@ -55,6 +58,12 @@ public class ServiceInfo {
 	public int getTimeout() {
 		return this.timeOut;
 	}
-
-
+	
+	public void setTimestamp(Date timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+	
+	public Date getTimestamp() {
+		return this.timeStamp;
+	}
 }
