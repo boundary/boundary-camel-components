@@ -16,33 +16,12 @@ import com.boundary.camel.component.ping.PingCheck;
 /**
  * Implements a client socket connection to host and port.
  * 
- * The client can be configured and invoked in several different ways:
+ * The client can be configured and invoked as in the following code snippet
  * <pre>
- * 
- *    TCPClient client = new TCPClient();
- *    client.connect(); // Use defaults of host, port, and time out.
- *    
- *    ....
- *    
- *    TCPClient client = new TCPClient("myhost",1234,5000);
- *    client.connect();
- *    
- *    ...
- *    
- *    TCPClient client = new TCPClient();
- *    client.setHost("myhost");
- *    client.setPort(1234);
- *    client.setTimeout(5000);
- *    client.connect();
- *    
- *    ...
  *    
  *    TCPClient client = new TCPClient();
  *    client.connect("myhost",1234,5000);
  *    
- *    ...
- *    
- *    // NOTE: Any parameter specificed in the connect method will set its corresponding member variable.
  * </pre>
  * 
  * @author davidg
