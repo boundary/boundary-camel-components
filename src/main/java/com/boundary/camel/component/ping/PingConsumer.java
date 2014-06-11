@@ -18,27 +18,13 @@ public class PingConsumer extends ScheduledPollConsumer {
         this.endpoint = endpoint;
     }
     
-    protected PingInfo executePingCheck() {
-    	PingCheck pingCheck = new PingCheck();
-    	
-    	// TBD: Set this during initialization
-    	pingCheck.setHost(endpoint.getHost());
-    	
-    	return pingCheck.performCheck();
-    }
-    
 	@Override
 	protected int poll() throws Exception {
 
 		Exchange exchange = endpoint.createExchange();
 		Message message = exchange.getIn();
-
-		// Perform the health check on the host/service by
-		// 1) Running the Ping command
-		// 2) Attempting to connect to a socket on a port in the host
-		// 3) Making an HTTP(s) call to an endpoint
 		
-		PingInfo status = executePingCheck();
+		PingInfo status = endpoint.performCheck();
 
 		message.setBody(status, PingInfo.class);
 
@@ -49,9 +35,7 @@ public class PingConsumer extends ScheduledPollConsumer {
 		} finally {
 			// log exception if an exception occurred and was not handled
 			if (exchange.getException() != null) {
-				getExceptionHandler().handleException(
-						"Error processing exchange", exchange,
-						exchange.getException());
+				getExceptionHandler().handleException("Error processing exchange", exchange,exchange.getException());
 			}
 		}
 	}

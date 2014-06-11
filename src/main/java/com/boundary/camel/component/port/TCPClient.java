@@ -11,7 +11,7 @@ import java.nio.channels.IllegalBlockingModeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.boundary.camel.component.ping.PingCheck;
+import com.boundary.camel.component.ping.PingClient;
 
 /**
  * Implements a client socket connection to host and port.

@@ -27,14 +27,14 @@ import com.boundary.camel.component.common.ServiceStatus;
 /**
  * Implements a service check by using the ping command found in most *inix environments
  * 
- * Output from the {@link PingCheck} is a instance of {@link PingStatus}
+ * Output from the {@link PingClient} is a instance of {@link PingInfo}
  * 
  * @author davidg
  *
  */
-public class PingCheck extends ServiceCheck {
+public class PingClient extends ServiceCheck {
 	
-    private static final Logger LOG = LoggerFactory.getLogger(PingCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PingClient.class);
 
 	private long waitTime;
 	private long packetSize;
@@ -50,17 +50,13 @@ public class PingCheck extends ServiceCheck {
 	private final static String UNKNOWN_HOST_REG_EX = "^ping:\\s([\\w\\W\\s]*)";
 
 
-	public PingCheck() {
+	/**
+	 * Default constructor
+	 */
+	public PingClient() {
 
 	}
 
-	public PingInfo performCheck() {
-		PingInfo status;
-
-		status = executeCheck();
-
-		return status;
-	}
 	/**
 	 * Get the absolute path to the ping command.
 	 * Defaults to the bare ping command that uses
@@ -113,11 +109,11 @@ public class PingCheck extends ServiceCheck {
 	 * 
 	 * @return CommandLine
 	 */
-	protected CommandLine configureCommandline() {
+	protected CommandLine configureCommandline(PingConfiguration configuration) {
 
 		// TBD: Override command used
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("host", getHost());
+		map.put("host", configuration.getHost());
 		CommandLine commandLine = new CommandLine(getPingCommand());
 		commandLine.addArgument("-c");
 		commandLine.addArgument("2");
@@ -167,8 +163,7 @@ public class PingCheck extends ServiceCheck {
 	 * @param lines
 	 * @return PingSTatus
 	 */
-	protected PingInfo parse(int exitValue, List<String> outLines,
-			List<String> errLines) {
+	protected PingInfo parse(int exitValue, List<String> outLines,List<String> errLines) {
 		PingInfo info = new PingInfo();
 		Pattern roundTripTimePat = Pattern.compile(RTT_REG_EX);
 		Pattern transmitReceivePat = Pattern.compile(TRANSMITTED_RECEIVED_REG_EX);
@@ -237,15 +232,12 @@ public class PingCheck extends ServiceCheck {
 		return info;
 	}
 
-	protected PingInfo executeCheck() {
+	protected PingInfo ping(PingConfiguration configuration) {
 		PingInfo info = null;
-		
-		LOG.debug("executeCheck()");
-
 
 		// Configure our command line based on the OS
 		// we are running on.
-		CommandLine commandLine = configureCommandline();
+		CommandLine commandLine = configureCommandline(configuration);
 
 		// Create the executor and set the expected exit
 		// value of 0,2
@@ -274,23 +266,7 @@ public class PingCheck extends ServiceCheck {
 		return info;
 	}
 
-	/**
-	 * 
-	 * @param waitTime
-	 */
-	void setWaitTime(long waitTime) {
-		this.waitTime = waitTime;
-	}
-
-	public long getWaitTime() {
-		return waitTime;
-	}
-
-	public void setPacketSize(long packetSize) {
-		this.packetSize = packetSize;
-	}
-
-	public long getPacketSize() {
-		return this.packetSize;
+	public static PingClient setUpDefaultClient() {
+		return new PingClient();
 	}
 }

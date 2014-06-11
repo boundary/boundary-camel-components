@@ -115,7 +115,4 @@ public class PingInfo extends ServiceInfo {
 		
 		return s.toString();
 	}
-
-
-
 }

@@ -13,10 +13,13 @@ import com.boundary.camel.component.common.ServiceStatus;
 import com.boundary.camel.component.ping.PingInfo;
 
 public class PingComponentTest extends CamelTestSupport {
+	
+	private final String HOST = "localhost";
+	private final String UNKNOWN_HOST = "abc.def.com";
 
     @Test
     public void testPing() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:result");
+        MockEndpoint mock = getMockEndpoint("mock:consumer-connect");
         mock.expectedMessageCount(1);
         mock.await(5, TimeUnit.SECONDS);
         
@@ -33,7 +36,7 @@ public class PingComponentTest extends CamelTestSupport {
     
     @Test
     public void testMultiplePing() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:result");
+        MockEndpoint mock = getMockEndpoint("mock:consumer-connect");
         mock.expectedMessageCount(3);
         mock.await(10, TimeUnit.SECONDS);
         
@@ -53,8 +56,12 @@ public class PingComponentTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("ping://foo?host=localhost&delay=5")
-                  .to("mock:result");
+            	
+                from("ping://" + HOST + ":" + "/icmp?delay=5")
+                  .to("mock:consumer-connect-out");
+                
+                from("ping://" + UNKNOWN_HOST + ":" + "/icmp?delay=5")
+                .to("mock:consumer-unknown-host-out");
             }
         };
     }
