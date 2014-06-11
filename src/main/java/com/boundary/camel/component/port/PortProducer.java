@@ -1,6 +1,7 @@
 package com.boundary.camel.component.port;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,9 @@ public class PortProducer extends DefaultProducer {
     }
 
     public void process(Exchange exchange) throws Exception {
-        LOG.debug(exchange.getIn().getBody().toString());
-        System.out.println(exchange.getIn().getBody().toString());
+    	Message in = exchange.getIn();
+    	PortConfiguration configuration = in.getBody(PortConfiguration.class);
+    	PortInfo portInfo = endpoint.performCheck(configuration);
+    	in.setBody(portInfo);
     }
 }

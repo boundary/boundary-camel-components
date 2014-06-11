@@ -12,6 +12,7 @@ public class PortConfiguration implements Cloneable {
 	private static final String DEFAULT_HOST = "localhost";
 	private static final int DEFAULT_PORT = 7;
 	private static final int DEFAULT_TIMEOUT = 5000;
+	private static final String DEFAULT_PATH = "/tcp";
 	
     @UriParam
     private String host = DEFAULT_HOST;
@@ -22,7 +23,7 @@ public class PortConfiguration implements Cloneable {
     @UriParam
     private int timeOut = DEFAULT_TIMEOUT;
     
-	private String path;
+	private String path = DEFAULT_PATH;
     
     public PortConfiguration() {
     }
@@ -84,6 +85,30 @@ public class PortConfiguration implements Cloneable {
 	
 	public String getPath() {
 		return this.path;
+	}
+	
+	static public PortConfiguration getConfiguration(String host,int port,String path,int timeOut) {
+		PortConfiguration configuration = new PortConfiguration();
+		configuration.setHost(host);
+		configuration.setPort(port);
+		configuration.setPath(path);
+		configuration.setTimeout(timeOut);
+		return configuration;
+	}
+	
+	static public PortConfiguration getConfiguration(String host,int port) {
+		PortConfiguration configuration = new PortConfiguration();
+		configuration.setHost(host);
+		configuration.setPort(port);
+		return configuration;
+	}
+	
+	static public PortConfiguration getConfiguration(String host,int port,int timeOut) {
+		PortConfiguration configuration = new PortConfiguration();
+		configuration.setHost(host);
+		configuration.setPort(port);
+		configuration.setTimeout(timeOut);
+		return configuration;
 	}
 	
 	public String toString() {

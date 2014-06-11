@@ -50,50 +50,31 @@ public class PortComponentTest extends CamelTestSupport {
 
 	@Test
 	public void testPort() throws Exception {
-		MockEndpoint mock = getMockEndpoint("mock:connect");
+		MockEndpoint mock = getMockEndpoint("mock:consumer-connect");
 		mock.expectedMessageCount(1);
 		mock.await(5, TimeUnit.SECONDS);
 
 		mock.assertIsSatisfied();
 	}
+	
+	private void validateConnect(MockEndpoint mock) throws InterruptedException {
+		mock.assertIsSatisfied();
 
-	@Test
-	public void testConnect() {
-		// Start TCP server
-		SimpleServer server = new SimpleServer(PORT);
+		List<Exchange> receivedExchanges = mock.getReceivedExchanges();
+		for (Exchange e : receivedExchanges) {
+			PortInfo info = e.getIn().getBody(PortInfo.class);
 
-		try {
-			MockEndpoint mock = getMockEndpoint("mock:connect");
-			mock.expectedMessageCount(1);
-			mock.await(5, TimeUnit.SECONDS);
-
-			mock.assertIsSatisfied();
-
-			List<Exchange> receivedExchanges = mock.getReceivedExchanges();
-			for (Exchange e : receivedExchanges) {
-				PortInfo info = e.getIn().getBody(PortInfo.class);
-
-				assertEquals("check message", "OK", info.getMessage());
-				assertEquals("check host", HOST, info.getHost());
-				assertEquals("check port", PORT, info.getPort());
-				assertTrue(info.getPortStatus() == PortStatus.CONNECTED);
-				assertEquals("check timeout", TIMEOUT, info.getTimeout());
-				assertTrue(info.getStatus() == ServiceStatus.SUCCESS);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			assertEquals("check message", "OK", info.getMessage());
+			assertEquals("check host", HOST, info.getHost());
+			assertEquals("check port", PORT, info.getPort());
+			assertTrue(info.getPortStatus() == PortStatus.CONNECTED);
+			assertEquals("check timeout", TIMEOUT, info.getTimeout());
+			assertTrue(info.getStatus() == ServiceStatus.SUCCESS);
 		}
-		finally {
-			server.stopServer();
-		}
+
 	}
-
-	@Test
-	public void testConnectionRefused() throws InterruptedException {
-		MockEndpoint mock = getMockEndpoint("mock:connection-refused");
-		mock.expectedMessageCount(1);
-		mock.await(5, TimeUnit.SECONDS);
-
+	
+	private void validateConnectionRefused(MockEndpoint mock) throws InterruptedException {
 		mock.assertIsSatisfied();
 
 		List<Exchange> receivedExchanges = mock.getReceivedExchanges();
@@ -109,14 +90,10 @@ public class PortComponentTest extends CamelTestSupport {
 			assertEquals("check timeout", TIMEOUT, info.getTimeout());
 			assertTrue(info.getStatus() == ServiceStatus.FAIL);
 		}
+
 	}
 	
-	@Test
-	public void testUnknownHost() throws InterruptedException {
-		MockEndpoint mock = getMockEndpoint("mock:unknown-host");
-		mock.expectedMessageCount(1);
-		mock.await(5, TimeUnit.SECONDS);
-
+	private void validateUnknownHost(MockEndpoint mock) throws InterruptedException {
 		mock.assertIsSatisfied();
 
 		List<Exchange> receivedExchanges = mock.getReceivedExchanges();
@@ -131,24 +108,122 @@ public class PortComponentTest extends CamelTestSupport {
 			assertEquals("check timeout", TIMEOUT, info.getTimeout());
 			assertTrue(info.getStatus() == ServiceStatus.FAIL);
 		}
+
 	}
+
+	@Test
+	public void testConsumerConnect() {
+		// Start TCP server
+		SimpleServer server = new SimpleServer(PORT);
+
+		try {
+			MockEndpoint mock = getMockEndpoint("mock:consumer-connect");
+			mock.expectedMessageCount(1);
+			mock.await(5, TimeUnit.SECONDS);
+
+			validateConnect(mock);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			server.stopServer();
+		}
+	}
+
+	@Test
+	public void testConsumerConnectionRefused() throws InterruptedException {
+		MockEndpoint mock = getMockEndpoint("mock:consumer-connection-refused");
+		mock.expectedMessageCount(1);
+		mock.await(5, TimeUnit.SECONDS);
+		
+		validateConnectionRefused(mock);
+	}
+	
+	@Test
+	public void testConsumerUnknownHost() throws InterruptedException {
+		MockEndpoint mock = getMockEndpoint("mock:consumer-unknown-host");
+		mock.expectedMessageCount(1);
+		mock.await(5, TimeUnit.SECONDS);
+
+		validateUnknownHost(mock);
+	}
+	
+	@Test
+	public void testProducerConnect() {
+		// Start TCP server
+		SimpleServer server = new SimpleServer(PORT);
+
+		try {
+			MockEndpoint mock = getMockEndpoint("mock:producer-connect");
+			mock.expectedMessageCount(1);
+			mock.await(5, TimeUnit.SECONDS);
+			
+			template.sendBody("direct:config-connect",PortConfiguration.getConfiguration(HOST,PORT,TIMEOUT));
+			
+			validateConnect(mock);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			server.stopServer();
+		}
+	}
+	
+	@Test
+	public void testProducerConnectionRefused() throws InterruptedException {
+		MockEndpoint mock = getMockEndpoint("mock:producer-connection-refused");
+		mock.expectedMessageCount(1);
+		mock.await(5, TimeUnit.SECONDS);
+		
+		template.sendBody("direct:config-connection-refused",PortConfiguration.getConfiguration(HOST,UNKNOWN_PORT,TIMEOUT));
+		
+		validateConnectionRefused(mock);
+	}
+	
+	@Test
+	public void testProducerUnknownHost() throws InterruptedException {
+		MockEndpoint mock = getMockEndpoint("mock:producer-unknown-host");
+		mock.expectedMessageCount(1);
+		mock.await(5, TimeUnit.SECONDS);
+		
+		template.sendBody("direct:config-unknown-host",PortConfiguration.getConfiguration(UKNOWN_HOST,PORT,TIMEOUT));
+
+		validateUnknownHost(mock);
+	}
+
 
 	@Override
 	protected RouteBuilder createRouteBuilder() throws Exception {
 		return new RouteBuilder() {
 			public void configure() {
 				from("port://" + HOST + ":" + PORT + "/tcp?timeout=" + TIMEOUT + "&delay=10000")
-				.to("mock:connect");
+				.to("mock:consumer-connect");
 				
 				from("port://" + HOST + ":" + UNKNOWN_PORT + "/tcp?timeout=" + TIMEOUT + "&delay=1000")
-				.to("mock:connection-refused");
+				.to("mock:consumer-connection-refused");
 				
 				from("port://" + "abc.def.com" + ":" + PORT + "/tcp?timeout=" + TIMEOUT + "&delay=10000")
-				.to("mock:unknown-host");
+				.to("mock:consumer-unknown-host");
 				
 				from("port://" + "10.0.0.0" + ":" + PORT + "/tcp?timeout=" + TIMEOUT + "&delay=10000")
-				.to("mock:timeout");
-
+				.to("mock:consumer-timeout");
+				
+				from("direct:config-connect")
+				.to("port://tcp")
+				.to("mock:producer-connect")
+				.to("stream:out");
+				
+				from("direct:config-connection-refused")
+				.to("port://tcp")
+				.to("mock:producer-connection-refused")
+				.to("stream:out");
+				
+				from("direct:config-unknown-host")
+				.to("port://tcp")
+				.to("mock:producer-unknown-host")
+				.to("mock:out");
 			}
 		};
 	}

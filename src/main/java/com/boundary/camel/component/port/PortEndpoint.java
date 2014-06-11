@@ -102,14 +102,18 @@ public class PortEndpoint extends ServiceEndpoint {
     	}
     }
     
-    public PortInfo performCheck() {
+    public PortInfo performCheck(PortConfiguration configuration) {
     	PortInfo info = new PortInfo();
-    	
-    	PortConfiguration configuration = getConfiguration();
+   
     	client.connect(configuration.getHost(),configuration.getPort(),configuration.getTimeout());
     	
     	setPortInfo(info,configuration,client);
     	
     	return info;
+
+    }
+    
+    public PortInfo performCheck() {
+    	return this.performCheck(getConfiguration());
     }
 }
