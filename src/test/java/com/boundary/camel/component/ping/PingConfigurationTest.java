@@ -12,8 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.boundary.camel.component.ping.PingConfiguration;
-import com.boundary.camel.component.port.PortConfiguration;
-
 
 public class PingConfigurationTest {
 
@@ -34,13 +32,6 @@ public class PingConfigurationTest {
 
 	@After
 	public void tearDown() throws Exception {
-	}
-
-	@Test
-	public void testPingArguments() {
-		PingConfiguration args = new PingConfiguration();
-		
-		assertEquals("Check default WaitTime",args.DEFAULT_WAIT_TIME,args.getWaitTime());
 	}
 
 	@Test
@@ -75,6 +66,47 @@ public class PingConfigurationTest {
 		assertEquals("check path","/icmp",configuration.getPath());
 		assertEquals("check user","barney",configuration.getUser());
 		assertEquals("check password","rubble",configuration.getPassword());
+	}
+	
+	@Test
+	public void testURIConfigurationNoPort() throws URISyntaxException {
+		PingConfiguration configuration = new PingConfiguration(new URI("ping://myhost:/icmp?timeout=5"));
+		assertEquals("check host","myhost",configuration.getHost());
+		assertEquals("check port",7,configuration.getPort());
+		assertEquals("check path","/icmp",configuration.getPath());
+		assertNull("check user",configuration.getUser());
+		assertNull("check password",configuration.getPassword());
+	}
+	
+	@Test
+	public void testURIConfigurationkHostOnly() throws URISyntaxException {
+		PingConfiguration configuration = new PingConfiguration(new URI("ping://myhost/icmp"));
+		assertEquals("check host","myhost",configuration.getHost());
+		assertEquals("check port",7,configuration.getPort());
+		assertEquals("check path","/icmp",configuration.getPath());
+		assertNull("check user",configuration.getUser());
+		assertNull("check password",configuration.getPassword());
+	}
+
+	
+	@Test
+	public void testURIConfigurationNoUserInfo() throws URISyntaxException {
+		PingConfiguration configuration = new PingConfiguration(new URI("ping://myhost:/icmp?timeout=5"));
+		assertEquals("check host","myhost",configuration.getHost());
+		assertEquals("check port",7,configuration.getPort());
+		assertEquals("check path","/icmp",configuration.getPath());
+		assertNull("check user",configuration.getUser());
+		assertNull("check password",configuration.getPassword());
+	}
+	
+	@Test
+	public void testURIConfigurationNoPassword() throws URISyntaxException {
+		PingConfiguration configuration = new PingConfiguration(new URI("ping://fred:@myhost/icmp?timeout=5"));
+		assertEquals("check host","myhost",configuration.getHost());
+		assertEquals("check port",7,configuration.getPort());
+		assertEquals("check path","/icmp",configuration.getPath());
+		assertEquals("check user","fred",configuration.getUser());
+		assertNull("check password",configuration.getPassword());
 	}
 
 	@Test

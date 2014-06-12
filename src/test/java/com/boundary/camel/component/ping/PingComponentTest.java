@@ -1,6 +1,7 @@
 package com.boundary.camel.component.ping;
 
 import java.util.List;
+
 import java.util.concurrent.TimeUnit;
 
 import org.apache.camel.Exchange;

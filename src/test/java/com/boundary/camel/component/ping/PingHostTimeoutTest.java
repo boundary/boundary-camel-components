@@ -38,7 +38,7 @@ public class PingHostTimeoutTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("ping://?delay=5&host=192.168.1.27")
+                from("ping://192.168.1.27?delay=5")
                   .to("mock:result");
             }
         };

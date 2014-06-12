@@ -77,11 +77,17 @@ public class SimpleServer extends Thread {
 	/**
 	 * Stop listening on the socket by closing {@link Socket} instance.
 	 */
-	public void stopServer(){
-		try {
-		listen_socket.close();
-		} catch(Exception e) {
-			System.out.println("Stopping Server");
-		}
+	public void stopServer() {
+		new Thread() {
+			public void run() {
+				try {
+					listen_socket.close();
+					System.out.println("Stopping Server");
+				} catch(Exception e) {
+					System.out.println("Exception Stopping Server");
+					e.printStackTrace();
+				}
+			}
+		}.start();
 	}
 }

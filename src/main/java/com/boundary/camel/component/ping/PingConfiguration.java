@@ -6,7 +6,6 @@ import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.spi.UriParam;
 
 import com.boundary.camel.component.common.ServiceCheckBaseConfiguration;
-import com.boundary.camel.component.port.PortConfiguration;
 
 public class PingConfiguration extends ServiceCheckBaseConfiguration implements Cloneable {
 
@@ -27,6 +26,19 @@ public class PingConfiguration extends ServiceCheckBaseConfiguration implements 
 		configure(uri);
 	}
 	
+	private void setUserInfo(String userInfo) {
+		if (userInfo != null) {
+			String[] s = userInfo.split(":");
+
+			if (s.length >= 1) {
+				setUser(s[0]);
+			}
+			if (s.length == 2) {
+				setPassword(s[1]);
+			}
+		}
+	}
+	
     public void configure(URI uri) {
         // UserInfo can contain both username and password as: user:pwd@sshserver
         // see: http://en.wikipedia.org/wiki/URI_scheme
@@ -38,10 +50,8 @@ public class PingConfiguration extends ServiceCheckBaseConfiguration implements 
         if (uriPort != -1) {
             setPort(uriPort);
         }
-        String [] userInfo = uri.getUserInfo().split(":");
-        setUser(userInfo[0]);
-        setPassword(userInfo[1]);
-        setPath(uri.getPath());
+        setUserInfo(uri.getUserInfo());
+		setPath(uri.getPath());
     }
     
     public PingConfiguration copy() {
