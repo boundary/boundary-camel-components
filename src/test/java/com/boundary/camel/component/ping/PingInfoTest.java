@@ -18,7 +18,7 @@ import com.boundary.camel.component.ping.PingInfo;
  * @author davidg
  * 
  */
-public class PingStatusTest {
+public class PingInfoTest {
 	
 	private PingInfo info;
 
