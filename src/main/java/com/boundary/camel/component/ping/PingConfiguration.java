@@ -94,4 +94,21 @@ public class PingConfiguration extends ServiceCheckBaseConfiguration implements 
 
 		return s.toString();
 	}
+	
+	public static PingConfiguration getConfiguration(String host,int timeOut) {
+		PingConfiguration configuration = new PingConfiguration();
+		
+		configuration.setHost(host);
+		configuration.setTimeout(timeOut);
+		
+		return configuration;
+	}
+	
+	public static PingConfiguration getConfiguration(String host) {
+		return getConfiguration(host,DEFAULT_TIMEOUT);
+	}
+	
+	public static PingConfiguration getConfiguration() {
+		return getConfiguration(DEFAULT_HOST,DEFAULT_TIMEOUT);
+	}
 }

@@ -13,9 +13,9 @@ import org.apache.camel.spi.UriParams;
 @UriParams
 public class ServiceCheckBaseConfiguration implements ServiceCheckConfiguration {
 	
-	public final String DEFAULT_HOST="localhost";
-	public final int DEFAULT_PORT = 7;
-	public final int DEFAULT_TIMEOUT = 5000;
+	public static final String DEFAULT_HOST="localhost";
+	public static final int DEFAULT_PORT = 7;
+	public static final int DEFAULT_TIMEOUT = 5000;
 	
 	private String host = DEFAULT_HOST;
 	private int port = DEFAULT_PORT;

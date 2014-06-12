@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.boundary.camel.component.common.ServiceStatus;
 import com.boundary.camel.component.ping.PingInfo;
+import com.boundary.camel.component.port.PortConfiguration;
 
 public class PingComponentTest extends CamelTestSupport {
 	
@@ -20,13 +21,8 @@ public class PingComponentTest extends CamelTestSupport {
 	private final String UNKNOWN_HOST = "abc.def.com";
 	private final String UNREACHABLE_HOST = "192.168.1.27";
 	private final String TIMEOUT_HOST = "192.168.1.26";
-
-    @Test
-    public void testPing() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:consumer-connect-out");
-        mock.expectedMessageCount(1);
-        mock.await(5, TimeUnit.SECONDS);
-        
+	
+	private void validatePing(MockEndpoint mock) throws InterruptedException {
         mock.assertIsSatisfied();
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
@@ -36,32 +32,9 @@ public class PingComponentTest extends CamelTestSupport {
         	assertEquals("check transmitted/received", status.getTransmitted(),status.getReceived());
            	assertTrue("check ping status",status.getStatus() == ServiceStatus.SUCCESS);
         }
-    }
-    
-    @Test
-    public void testMultiplePing() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:consumer-connect-out");
-        mock.expectedMessageCount(3);
-        mock.await(10, TimeUnit.SECONDS);
-        
-        mock.assertIsSatisfied();
-        List <Exchange> receivedExchanges = mock.getReceivedExchanges();
-        for(Exchange e: receivedExchanges) {
-        	PingInfo status = e.getIn().getBody(PingInfo.class);
-        	
-        	assertTrue("check transmitted",status.getTransmitted() > 0);
-        	assertEquals("check transmitted/received", status.getTransmitted(),status.getReceived());
-        	assertTrue("check ping status",status.getStatus() == ServiceStatus.SUCCESS);
-        }
-
-    }
-    
-    @Test
-    public void testHostUnresolveable() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:consumer-unknown-host-out");
-        mock.expectedMinimumMessageCount(1);
-        mock.await(10, TimeUnit.SECONDS);
-        
+	}
+	
+	private void validateUnresolveableHost(MockEndpoint mock) throws InterruptedException {
         mock.assertIsSatisfied();
         
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
@@ -76,15 +49,9 @@ public class PingComponentTest extends CamelTestSupport {
         	assertTrue("check transmitted",status.getTransmitted() == 0);
         	assertTrue(status.getStatus() == ServiceStatus.FAIL);
         }
-    }
-
-    
-    @Test
-    public void testHostNotReachable() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:consumer-unreachable-host-out");
-        mock.expectedMinimumMessageCount(1);
-        mock.await(20, TimeUnit.SECONDS);
-        
+	}
+	
+	private void validateHostNotReachable(MockEndpoint mock) throws InterruptedException {
         mock.assertIsSatisfied();
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
@@ -94,15 +61,10 @@ public class PingComponentTest extends CamelTestSupport {
         	assertEquals("check received packets",0,status.getReceived());
         	assertTrue("check ping status",status.getStatus() == ServiceStatus.FAIL);
         }
-    }
-    
-    
-    @Test
-    public void testTimeOut() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:consumer-timeout-host-out");
-        mock.expectedMinimumMessageCount(1);
-        mock.await(15, TimeUnit.SECONDS);
-        
+
+	}
+	
+	private void validateHostTimeout(MockEndpoint mock) throws InterruptedException {
         mock.assertIsSatisfied();
         
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
@@ -113,6 +75,93 @@ public class PingComponentTest extends CamelTestSupport {
         	assertTrue("check received",status.getReceived() == 0);
         	assertTrue(status.getStatus() == ServiceStatus.FAIL);
         }
+	}
+
+    @Test
+    public void testConsumerPing() throws Exception {
+        MockEndpoint mock = getMockEndpoint("mock:consumer-ping-out");
+        mock.expectedMessageCount(1);
+        mock.await(5, TimeUnit.SECONDS);
+        
+        validatePing(mock);
+    }
+    
+	@Test
+	public void testMultiplePing() throws Exception {
+		MockEndpoint mock = getMockEndpoint("mock:consumer-ping-out");
+		mock.expectedMessageCount(3);
+		mock.await(10, TimeUnit.SECONDS);
+
+		validatePing(mock);
+	}
+    
+    @Test
+    public void testHostUnresolveable() throws Exception {
+        MockEndpoint mock = getMockEndpoint("mock:consumer-unknown-host-out");
+        mock.expectedMinimumMessageCount(1);
+        mock.await(10, TimeUnit.SECONDS);
+        
+        validateUnresolveableHost(mock);
+    }
+    
+    @Test
+    public void testHostNotReachable() throws Exception {
+        MockEndpoint mock = getMockEndpoint("mock:consumer-unreachable-host-out");
+        mock.expectedMinimumMessageCount(1);
+        mock.await(20, TimeUnit.SECONDS);
+        
+        validateHostNotReachable(mock);
+    }
+    
+    @Test
+    public void testTimeOut() throws Exception {
+        MockEndpoint mock = getMockEndpoint("mock:consumer-timeout-host-out");
+        mock.expectedMinimumMessageCount(1);
+        mock.await(15, TimeUnit.SECONDS);
+        
+        validateHostTimeout(mock);
+    }
+    
+    @Test
+    public void testProducerPing() throws Exception {
+        MockEndpoint mock = getMockEndpoint("mock:producer-ping-out");
+        mock.expectedMessageCount(1);
+        mock.await(5, TimeUnit.SECONDS);
+        
+		template.sendBody("direct:producer-ping-in",PingConfiguration.getConfiguration(HOST));
+        
+		validatePing(mock);
+    }
+    
+    @Test
+    public void testProducerUnknownHost() throws Exception {
+        MockEndpoint mock = getMockEndpoint("mock:producer-ping-out");
+        mock.expectedMessageCount(1);
+        mock.await(5, TimeUnit.SECONDS);
+        
+		template.sendBody("direct:producer-ping-in",PingConfiguration.getConfiguration(UNKNOWN_HOST));
+        
+		validateUnresolveableHost(mock);
+    }
+    
+    public void testProducerHostNotReachable() throws Exception {
+        MockEndpoint mock = getMockEndpoint("mock:producer-ping-out");
+        mock.expectedMessageCount(1);
+        mock.await(5, TimeUnit.SECONDS);
+        
+		template.sendBody("direct:producer-ping-in",PingConfiguration.getConfiguration(UNREACHABLE_HOST));
+        
+		validateHostNotReachable(mock);
+    }
+    
+    public void testProducerHostTimeOut() throws Exception {
+        MockEndpoint mock = getMockEndpoint("mock:producer-ping-out");
+        mock.expectedMessageCount(1);
+        mock.await(5, TimeUnit.SECONDS);
+        
+		template.sendBody("direct:producer-ping-in",PingConfiguration.getConfiguration(TIMEOUT_HOST));
+        
+		validateHostTimeout(mock);
     }
 
     @Override
@@ -121,7 +170,7 @@ public class PingComponentTest extends CamelTestSupport {
             public void configure() {
             	
                 from("ping://" + HOST + ":" + "/icmp?delay=5")
-                .to("mock:consumer-connect-out");
+                .to("mock:consumer-ping-out");
                 
                 from("ping://" + UNKNOWN_HOST + ":" + "/icmp?delay=5")
                 .to("mock:consumer-unknown-host-out");
@@ -131,7 +180,10 @@ public class PingComponentTest extends CamelTestSupport {
                 
                 from("ping://" + TIMEOUT_HOST + ":" + "/icmp?delay=5")
                 .to("mock:consumer-timeout-host-out");
-
+                
+                from("direct:producer-ping-in")
+                .to("ping://icmp")
+                .to("mock:producer-ping-out");
             }
         };
     }
