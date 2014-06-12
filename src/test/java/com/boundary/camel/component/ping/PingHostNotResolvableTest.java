@@ -42,7 +42,7 @@ public class PingHostNotResolvableTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("ping://?delay=5&host=foo.bar.com")
+                from("ping://foo.bar.com?delay=5")
                   .to("mock:result");
             }
         };
