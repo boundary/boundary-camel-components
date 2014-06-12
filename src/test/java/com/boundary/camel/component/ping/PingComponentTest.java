@@ -87,7 +87,7 @@ public class PingComponentTest extends CamelTestSupport {
     }
     
 	@Test
-	public void testMultiplePing() throws Exception {
+	public void testConsumerMultiplePing() throws Exception {
 		MockEndpoint mock = getMockEndpoint("mock:consumer-ping-out");
 		mock.expectedMessageCount(3);
 		mock.await(10, TimeUnit.SECONDS);
@@ -96,7 +96,7 @@ public class PingComponentTest extends CamelTestSupport {
 	}
     
     @Test
-    public void testHostUnresolveable() throws Exception {
+    public void testConsumerHostUnresolveable() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:consumer-unknown-host-out");
         mock.expectedMinimumMessageCount(1);
         mock.await(10, TimeUnit.SECONDS);
@@ -105,7 +105,7 @@ public class PingComponentTest extends CamelTestSupport {
     }
     
     @Test
-    public void testHostNotReachable() throws Exception {
+    public void testConsumerHostNotReachable() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:consumer-unreachable-host-out");
         mock.expectedMinimumMessageCount(1);
         mock.await(20, TimeUnit.SECONDS);
@@ -114,7 +114,7 @@ public class PingComponentTest extends CamelTestSupport {
     }
     
     @Test
-    public void testTimeOut() throws Exception {
+    public void testConsumerTimeOut() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:consumer-timeout-host-out");
         mock.expectedMinimumMessageCount(1);
         mock.await(15, TimeUnit.SECONDS);
@@ -144,6 +144,7 @@ public class PingComponentTest extends CamelTestSupport {
 		validateUnresolveableHost(mock);
     }
     
+    @Test
     public void testProducerHostNotReachable() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:producer-ping-out");
         mock.expectedMessageCount(1);
@@ -154,6 +155,7 @@ public class PingComponentTest extends CamelTestSupport {
 		validateHostNotReachable(mock);
     }
     
+    @Test
     public void testProducerHostTimeOut() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:producer-ping-out");
         mock.expectedMessageCount(1);
