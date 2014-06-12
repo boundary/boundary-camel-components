@@ -20,7 +20,7 @@ public class PingComponentTest extends CamelTestSupport {
 
     @Test
     public void testPing() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:consumer-connect");
+        MockEndpoint mock = getMockEndpoint("mock:consumer-connect-out");
         mock.expectedMessageCount(1);
         mock.await(5, TimeUnit.SECONDS);
         
@@ -37,7 +37,7 @@ public class PingComponentTest extends CamelTestSupport {
     
     @Test
     public void testMultiplePing() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:consumer-connect");
+        MockEndpoint mock = getMockEndpoint("mock:consumer-connect-out");
         mock.expectedMessageCount(3);
         mock.await(10, TimeUnit.SECONDS);
         
@@ -59,7 +59,7 @@ public class PingComponentTest extends CamelTestSupport {
             public void configure() {
             	
                 from("ping://" + HOST + ":" + "/icmp?delay=5")
-                  .to("mock:consumer-connect-out");
+                .to("mock:consumer-connect-out");
                 
                 from("ping://" + UNKNOWN_HOST + ":" + "/icmp?delay=5")
                 .to("mock:consumer-unknown-host-out");
