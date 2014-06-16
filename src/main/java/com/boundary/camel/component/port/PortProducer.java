@@ -21,6 +21,7 @@ public class PortProducer extends DefaultProducer {
     public void process(Exchange exchange) throws Exception {
     	Message in = exchange.getIn();
     	PortConfiguration configuration = in.getBody(PortConfiguration.class);
+    	LOG.debug("PortConfiguration: " + configuration);
     	PortInfo portInfo = endpoint.performCheck(configuration);
     	in.setBody(portInfo);
     }

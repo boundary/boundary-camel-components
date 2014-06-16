@@ -19,7 +19,7 @@ public class SimpleServer extends Thread {
 	/**
 	 * Helper function to output an error
 	 * 
-	 * @param e {@link Exception} that ocurred
+	 * @param e {@link Exception} that occurred
 	 * @param msg {@link String} containing an informative message
 	 */
 	public static void fail(Exception e, String msg) {

@@ -6,7 +6,7 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
 
 /**
- * Represents the component that manages {@link PingEndpoint}.
+ * Represents the component that manages {@link HttpEndpoint}.
  */
 public class HttpComponent extends DefaultComponent {
 

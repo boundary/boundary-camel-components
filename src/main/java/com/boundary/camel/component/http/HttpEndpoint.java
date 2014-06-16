@@ -3,6 +3,7 @@ package com.boundary.camel.component.http;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
+import org.apache.camel.Endpoint;
 
 import com.boundary.camel.component.common.ServiceEndpoint;
 

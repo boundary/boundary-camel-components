@@ -59,6 +59,7 @@ public class URLClient {
 	/**
 	 * Attempt a connection to the host and port.
 	 * 
+	 * @param s {@link String}
 	 */
 	public void connect(String s) {
 

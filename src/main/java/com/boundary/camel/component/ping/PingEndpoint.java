@@ -5,14 +5,10 @@ import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
+import org.apache.camel.Endpoint;
 
 import com.boundary.camel.component.common.ServiceEndpoint;
-import com.boundary.camel.component.common.ServiceStatus;
-import com.boundary.camel.component.port.PortComponent;
-import com.boundary.camel.component.port.PortConfiguration;
-import com.boundary.camel.component.port.PortConsumer;
-import com.boundary.camel.component.port.PortInfo;
-import com.boundary.camel.component.port.TCPClient;
+
 
 /**
  * Implements a Camel {@link Endpoint} to ping a host
@@ -82,31 +78,14 @@ public class PingEndpoint extends ServiceEndpoint {
     }
     
     public void setPingInfo(PingInfo info,PingConfiguration configuration,PingClient client) {
-    	
     	info.setHost(configuration.getHost());
     	info.setPort(configuration.getPort());
-    	
-    	// TBD: Setting the ServiceStatus
-    	
-//    	switch(client.getPortStatus()) {
-//    	case CONNECTED:
-//    		info.setStatus(ServiceStatus.SUCCESS);
-//    		break;
-//    	case CONNECTION_REFUSED:
-//    	case SOCKET_TIMEOUT:
-//    	case UNKNOWN_HOST:
-//    	case ERROR:
-//    		info.setStatus(ServiceStatus.FAIL);
-//    		break;
-//    	default:
-//    		assert false: "PortInfo not set for status: " + client.getPortStatus();
-//    	}
     }
     
     /**
      * 
      * @param configuration {@link PingConfiguration}
-     * @return
+     * @return {@link PingInfo}
      */
     public PingInfo performCheck(PingConfiguration configuration) {
     	PingInfo info = client.ping(configuration);

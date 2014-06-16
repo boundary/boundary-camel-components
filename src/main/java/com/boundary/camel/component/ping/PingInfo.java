@@ -34,7 +34,7 @@ public class PingInfo extends ServiceInfo {
 	/**
 	 * Sets the TTL (Time To Live) on the ICMP packet sent to the host.
 	 * 
-	 * @param ttl
+	 * @param ttl {@link int}
 	 */
 	public void setTTL(int ttl) {
 		this.ttl = ttl;

@@ -53,6 +53,9 @@ public class TCPClient {
 	/**
 	 * Attempt a connection to the host and port.
 	 * 
+	 * @param host {@link String}
+	 * @param port {@link int}
+	 * @param timeOut {@link int}
 	 */
 	public void connect(String host, int port, int timeOut) {
 		InetSocketAddress address = new InetSocketAddress(host, port);

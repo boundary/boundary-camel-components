@@ -5,6 +5,7 @@ import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.ScheduledPollEndpoint;
+import org.apache.camel.Endpoint;
 
 public class ServiceEndpoint extends ScheduledPollEndpoint {
 	
@@ -39,30 +40,34 @@ public class ServiceEndpoint extends ScheduledPollEndpoint {
 	}
 	
 	/**
-	 * Sets the host associated with this services {@link EndPoint}
+	 * Sets the host associated with this services {@link Endpoint}
 	 * 
-	 * @param host
+	 * @param host Host to be set on this {@link Endpoint}
 	 */
     public void setHost(String host) {
     	this.host = host;
     }
     
     /**
-     * Get the host associated with this service's {@link EndPoint}
+     * Get the host associated with this service's {@link Endpoint}
      * 
-     * @return String
+     * @return {@link String} Host associated with this {@link Endpoint}
      */
     public String getHost() {
     	return this.host;
     }
     
+    /**
+     * Sets the port associated with this {@link Endpoint}
+     * @param port Port associated with this {@link Endpoint}
+     */
     public void setPort(int port) {
     	this.port = port;
     }
     
     /**
      * Returns the port of this {@link Endpoint}
-     * @return
+     * @return int Port associated with the {@link Endpoint}
      */
     public int getPort() {
     	return this.port;

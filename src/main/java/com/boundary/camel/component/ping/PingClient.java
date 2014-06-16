@@ -62,7 +62,7 @@ public class PingClient extends ServiceCheck {
 	 * Defaults to the bare ping command that uses
 	 * the PATH variable to find the executable.
 	 * 
-	 * @return
+	 * @return {@link String}
 	 */
 	public String findPingCommand() {
 		// Default to letting
@@ -84,7 +84,7 @@ public class PingClient extends ServiceCheck {
 	 * Determines if the ping command exists and
 	 * where it is located.
 	 * 
-	 * return String
+	 * @return {@link String}
 	 */
 	protected String getPingCommand() {
 		String s;
@@ -97,7 +97,6 @@ public class PingClient extends ServiceCheck {
 		else {
 			s = findPingCommand();
 		}
-
 		return s;
 	}
 
@@ -106,8 +105,8 @@ public class PingClient extends ServiceCheck {
 	 * ping on the platform we are running on.
 	 * 
 	 * TBD: Currently only handles *nix platforms.
-	 * 
-	 * @return CommandLine
+	 * @param configuration {@link PingConfiguration}
+	 * @return {@link CommandLine}
 	 */
 	protected CommandLine configureCommandline(PingConfiguration configuration) {
 
@@ -126,9 +125,8 @@ public class PingClient extends ServiceCheck {
 
 	/**
 	 * Create a {@link List} of the output from a {@link ByteArrayOutputStream}
-	 * @param out
-	 * @param err
-	 * @return List<String>
+	 * @param stream {@link ByteArrayOutputStream}
+	 * @return {@link List}
 	 */
 	protected List<String> getStringOutput(ByteArrayOutputStream stream) {
 		List<String> lines = new ArrayList<String>();
@@ -159,9 +157,11 @@ public class PingClient extends ServiceCheck {
 	}
 	
 	/**
-	 * Parses the output of ping and populates a instance of {@link PingStatus}
-	 * @param lines
-	 * @return PingSTatus
+	 * Parses the output of ping and populates a instance of {@link PingInfo}
+	 * @param exitValue {@link int}
+	 * @param outLines {@link List}
+	 * @param errLines {@link List}
+	 * @return {@link PingInfo} 
 	 */
 	protected PingInfo parse(int exitValue, List<String> outLines,List<String> errLines) {
 		PingInfo info = new PingInfo();

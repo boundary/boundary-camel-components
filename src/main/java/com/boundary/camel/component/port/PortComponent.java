@@ -6,8 +6,9 @@ import java.util.Map;
 import org.apache.camel.Endpoint;	
 import org.apache.camel.impl.UriEndpointComponent;
 
+
 /**
- * Represents the component that manages {@link PingEndpoint}.
+ * Represents the component that manages {@link PortEndpoint}.
  */
 public class PortComponent extends UriEndpointComponent {
     private PortConfiguration configuration;
