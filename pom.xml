@@ -61,6 +61,13 @@
       <version>${log4j-version}</version>
     </dependency>
 
+	
+	<dependency>
+	<groupId>sshtools</groupId>
+	<artifactId>j2ssh-core</artifactId>
+	<version>0.2.2</version>
+	</dependency>
+
     <!-- testing -->
     <dependency>
       <groupId>org.apache.camel</groupId>
