@@ -10,7 +10,15 @@ public class SshxConfiguration extends ServiceCheckBaseConfiguration implements 
 	
 	
 	private String command;
+	private String expectedOutput;
 
+	public String getExpectedOutput() {
+		return expectedOutput;
+	}
+
+	public void setExpectedOutput(String expectedOutput) {
+		this.expectedOutput = expectedOutput;
+	}
 
 	public SshxConfiguration() {
 		
