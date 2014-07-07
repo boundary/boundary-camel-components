@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.camel.component.ssh;
+package com.boundary.camel.component.ssh;
 
+import org.apache.camel.component.ssh.FileKeyPairProvider;
 import org.apache.camel.test.AvailablePortFinder;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.apache.sshd.SshServer;
