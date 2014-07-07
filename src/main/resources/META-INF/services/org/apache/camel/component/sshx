@@ -1,1 +1,1 @@
-class=com.boundary.camel.component.ssh.SshComponent
+class=com.boundary.camel.component.ssh.SshxComponent
