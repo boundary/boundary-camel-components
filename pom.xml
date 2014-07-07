@@ -16,8 +16,12 @@
     <maven-resources-plugin-version>2.6</maven-resources-plugin-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <bouncycastle-version>1.49</bouncycastle-version>
     <camel-version>2.13.1</camel-version>
     <commons-exec-version>1.2</commons-exec-version>
+    <mina2-version>2.0.7</mina2-version>
+    <sshd-version>0.11.0</sshd-version>
     <slf4j-api-version>1.7.7</slf4j-api-version>
     <slf4j-log4j12-version>1.7.7</slf4j-log4j12-version>
     <log4j-version>1.2.17</log4j-version>
@@ -62,23 +66,35 @@
     </dependency>
 
 	
-	<dependency>
-	<groupId>sshtools</groupId>
-	<artifactId>j2ssh-core</artifactId>
-	<version>0.2.2</version>
-	</dependency>
-
     <!-- testing -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test</artifactId>
       <version>${camel-version}</version>
     </dependency>
+
     <dependency>
-    	<groupId>org.apache.camel</groupId>
-    	<artifactId>camel-ssh</artifactId>
-    	<version>${camel-version}</version>
+      <groupId>org.apache.mina</groupId>
+      <artifactId>mina-core</artifactId>
+      <version>${mina2-version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.sshd</groupId>
+      <artifactId>sshd-core</artifactId>
+      <version>${sshd-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpg-jdk15on</artifactId>
+      <version>${bouncycastle-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpkix-jdk15on</artifactId>
+      <version>${bouncycastle-version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -102,22 +118,8 @@
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
-
-      <!-- to generate the MANIFEST-FILE of the bundle -->
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.3.7</version>
-        <extensions>true</extensions>
-        <configuration>
-          <instructions>
-            <Bundle-SymbolicName>boundary.com.camel-ping</Bundle-SymbolicName>
-            <Export-Service>org.apache.camel.spi.ComponentResolver;component=ping</Export-Service>
-          </instructions>
-        </configuration>
-      </plugin>
-
     </plugins>
+
   </build>
 
 </project>
