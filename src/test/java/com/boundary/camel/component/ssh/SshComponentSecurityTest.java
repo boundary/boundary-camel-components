@@ -18,6 +18,7 @@ package com.boundary.camel.component.ssh;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.component.ssh.FileKeyPairProvider;
 import org.apache.sshd.common.KeyPairProvider;
 import org.junit.Test;
 
@@ -58,7 +59,7 @@ public class SshComponentSecurityTest extends SshComponentTestSupport {
                         .handled(true)
                         .to("mock:error");
 
-                SshComponent sshComponent = new SshComponent();
+                SshxComponent sshComponent = new SshxComponent();
                 sshComponent.setHost("localhost");
                 sshComponent.setPort(port);
                 sshComponent.setUsername("smx");
