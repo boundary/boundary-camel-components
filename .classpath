@@ -9,18 +9,17 @@
   <classpathentry kind="var" path="M2_REPO/org/apache/camel/camel-core/2.13.1/camel-core-2.13.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/xml/bind/jaxb-impl/2.2.6/jaxb-impl-2.2.6.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/camel/camel-ssh/2.13.1/camel-ssh-2.13.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/mina/mina-core/2.0.7/mina-core-2.0.7.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/sshd/sshd-core/0.11.0/sshd-core-0.11.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcpg-jdk15on/1.49/bcpg-jdk15on-1.49.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcprov-jdk15on/1.49/bcprov-jdk15on-1.49.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcpkix-jdk15on/1.49/bcpkix-jdk15on-1.49.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/camel/camel-stream/2.13.1/camel-stream-2.13.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-exec/1.2/commons-exec-1.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-log4j12/1.7.7/slf4j-log4j12-1.7.7.jar"/>
   <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17.jar"/>
-  <classpathentry kind="var" path="M2_REPO/sshtools/j2ssh-core/0.2.2/j2ssh-core-0.2.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/camel/camel-test/2.13.1/camel-test-2.13.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.11/junit-4.11.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/camel/camel-ssh/2.13.1/camel-ssh-2.13.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/mina/mina-core/2.0.7/mina-core-2.0.7.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/sshd/sshd-core/0.10.1/sshd-core-0.10.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcpg-jdk15on/1.49/bcpg-jdk15on-1.49.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcprov-jdk15on/1.49/bcprov-jdk15on-1.49.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcpkix-jdk15on/1.49/bcpkix-jdk15on-1.49.jar"/>
 </classpath>
