@@ -1,12 +1,12 @@
 package com.boundary.camel.component.port;
 
-import com.boundary.camel.component.common.ServiceInfo;
+import com.boundary.camel.component.common.ServiceResult;
 
-public class PortInfo extends ServiceInfo {
+public class PortResult extends ServiceResult {
 	
 	private PortStatus portStatus;
 
-	PortInfo() {
+	PortResult() {
 	}
 
 	public void setPortStatus(PortStatus portStatus) {

@@ -18,9 +18,9 @@ package com.boundary.camel.component.ssh;
 
 import java.io.InputStream;
 
-import com.boundary.camel.component.common.ServiceInfo;
+import com.boundary.camel.component.common.ServiceResult;
 
-public class SshxResult extends ServiceInfo {
+public class SshxResult extends ServiceResult {
     
     /**
      * The value of this header is a {@link InputStream} with the standard error

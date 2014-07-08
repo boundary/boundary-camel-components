@@ -22,7 +22,7 @@ public class PortProducer extends DefaultProducer {
     	Message in = exchange.getIn();
     	PortConfiguration configuration = in.getBody(PortConfiguration.class);
     	LOG.debug("PortConfiguration: " + configuration);
-    	PortInfo portInfo = endpoint.performCheck(configuration);
+    	PortResult portInfo = endpoint.performCheck(configuration);
     	in.setBody(portInfo);
     }
 }

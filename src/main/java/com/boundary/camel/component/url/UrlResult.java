@@ -2,15 +2,15 @@ package com.boundary.camel.component.url;
 
 import java.net.URI;
 
-import com.boundary.camel.component.common.ServiceInfo;
+import com.boundary.camel.component.common.ServiceResult;
 
-public class UrlInfo extends ServiceInfo {
+public class UrlResult extends ServiceResult {
 	
 	private URLStatus urlStatus;
 	private URI uri;
 	private String url;
 
-	UrlInfo() {
+	UrlResult() {
 	}
 
 	public void setURLStatus(URLStatus urlStatus) {

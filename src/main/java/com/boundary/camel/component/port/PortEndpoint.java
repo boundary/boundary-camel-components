@@ -81,7 +81,7 @@ public class PortEndpoint extends ServiceEndpoint {
         super.doStop();
     }
 
-    public void setPortInfo(PortInfo info,PortConfiguration configuration,TCPClient client) {
+    public void setPortInfo(PortResult info,PortConfiguration configuration,TCPClient client) {
     	
     	info.setHost(configuration.getHost());
     	info.setPort(configuration.getPort());
@@ -103,8 +103,8 @@ public class PortEndpoint extends ServiceEndpoint {
     	}
     }
     
-    public PortInfo performCheck(PortConfiguration configuration) {
-    	PortInfo info = new PortInfo();
+    public PortResult performCheck(PortConfiguration configuration) {
+    	PortResult info = new PortResult();
    
     	client.connect(configuration.getHost(),configuration.getPort(),configuration.getTimeout());
     	
@@ -114,7 +114,7 @@ public class PortEndpoint extends ServiceEndpoint {
 
     }
     
-    public PortInfo performCheck() {
+    public PortResult performCheck() {
     	return this.performCheck(getConfiguration());
     }
 }

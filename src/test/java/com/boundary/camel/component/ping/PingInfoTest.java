@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.boundary.camel.component.ping.PingInfo;
+import com.boundary.camel.component.ping.PingResult;
 
 /**
  * @author davidg
@@ -20,7 +20,7 @@ import com.boundary.camel.component.ping.PingInfo;
  */
 public class PingInfoTest {
 	
-	private PingInfo info;
+	private PingResult info;
 
 	/**
 	 * @throws java.lang.Exception
@@ -42,7 +42,7 @@ public class PingInfoTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		info = new PingInfo();
+		info = new PingResult();
 	}
 
 	/**

@@ -77,7 +77,7 @@ public class PingEndpoint extends ServiceEndpoint {
         super.doStop();
     }
     
-    public void setPingInfo(PingInfo info,PingConfiguration configuration,PingClient client) {
+    public void setPingInfo(PingResult info,PingConfiguration configuration,PingClient client) {
     	info.setHost(configuration.getHost());
     	info.setPort(configuration.getPort());
     }
@@ -85,17 +85,17 @@ public class PingEndpoint extends ServiceEndpoint {
     /**
      * 
      * @param configuration {@link PingConfiguration}
-     * @return {@link PingInfo}
+     * @return {@link PingResult}
      */
-    public PingInfo performCheck(PingConfiguration configuration) {
-    	PingInfo info = client.ping(configuration);
+    public PingResult performCheck(PingConfiguration configuration) {
+    	PingResult info = client.ping(configuration);
     	
     	setPingInfo(info,configuration,client);
     	
     	return info;
     }
     
-    public PingInfo performCheck() {
+    public PingResult performCheck() {
     	return this.performCheck(getConfiguration());
     }
 

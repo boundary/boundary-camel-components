@@ -12,7 +12,7 @@ import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
 import com.boundary.camel.component.common.ServiceStatus;
-import com.boundary.camel.component.ping.PingInfo;
+import com.boundary.camel.component.ping.PingResult;
 import com.boundary.camel.component.port.PortConfiguration;
 
 public class PingComponentTest extends CamelTestSupport {
@@ -26,7 +26,7 @@ public class PingComponentTest extends CamelTestSupport {
         mock.assertIsSatisfied();
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
-        	PingInfo status = e.getIn().getBody(PingInfo.class);
+        	PingResult status = e.getIn().getBody(PingResult.class);
         	
          	assertTrue("check transmitted",status.getTransmitted() > 0);
         	assertEquals("check transmitted/received", status.getTransmitted(),status.getReceived());
@@ -39,7 +39,7 @@ public class PingComponentTest extends CamelTestSupport {
         
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
-        	PingInfo status = e.getIn().getBody(PingInfo.class);
+        	PingResult status = e.getIn().getBody(PingResult.class);
         	String message = status.getMessage().toUpperCase();
         	
     		Pattern messagePat = Pattern.compile("UNKNOWN HOST");
@@ -55,7 +55,7 @@ public class PingComponentTest extends CamelTestSupport {
         mock.assertIsSatisfied();
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
-        	PingInfo status = e.getIn().getBody(PingInfo.class);
+        	PingResult status = e.getIn().getBody(PingResult.class);
         	
         	assertTrue("check transmitted",status.getTransmitted() > 0);
         	assertEquals("check received packets",0,status.getReceived());
@@ -69,7 +69,7 @@ public class PingComponentTest extends CamelTestSupport {
         
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
-        	PingInfo status = e.getIn().getBody(PingInfo.class);
+        	PingResult status = e.getIn().getBody(PingResult.class);
         	
         	assertTrue("check transmitted",status.getTransmitted() > 0);
         	assertTrue("check received",status.getReceived() == 0);

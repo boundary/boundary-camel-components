@@ -18,8 +18,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.boundary.camel.component.common.ServiceStatus;
-import com.boundary.camel.component.ping.PingInfo;
-import com.boundary.camel.component.port.PortInfo;
+import com.boundary.camel.component.ping.PingResult;
+import com.boundary.camel.component.port.PortResult;
 import com.boundary.camel.component.util.SimpleServer;
 
 public class PortComponentTest extends CamelTestSupport {
@@ -62,7 +62,7 @@ public class PortComponentTest extends CamelTestSupport {
 
 		List<Exchange> receivedExchanges = mock.getReceivedExchanges();
 		for (Exchange e : receivedExchanges) {
-			PortInfo info = e.getIn().getBody(PortInfo.class);
+			PortResult info = e.getIn().getBody(PortResult.class);
 
 			assertEquals("check message", "OK", info.getMessage());
 			assertEquals("check host", HOST, info.getHost());
@@ -80,7 +80,7 @@ public class PortComponentTest extends CamelTestSupport {
 		List<Exchange> receivedExchanges = mock.getReceivedExchanges();
 		for (Exchange e : receivedExchanges) {
 
-			PortInfo info = e.getIn().getBody(PortInfo.class);
+			PortResult info = e.getIn().getBody(PortResult.class);
 
 			assertEquals("check host", HOST, info.getHost());
 			assertEquals("check port", UNKNOWN_PORT, info.getPort());
@@ -99,7 +99,7 @@ public class PortComponentTest extends CamelTestSupport {
 		List<Exchange> receivedExchanges = mock.getReceivedExchanges();
 		for (Exchange e : receivedExchanges) {
 
-			PortInfo info = e.getIn().getBody(PortInfo.class);
+			PortResult info = e.getIn().getBody(PortResult.class);
 
 			assertEquals("check host", UKNOWN_HOST, info.getHost());
 			assertEquals("check port", PORT, info.getPort());

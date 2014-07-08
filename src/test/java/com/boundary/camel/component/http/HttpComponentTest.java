@@ -11,7 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.boundary.camel.component.common.ServiceStatus;
-import com.boundary.camel.component.port.PortInfo;
+import com.boundary.camel.component.port.PortResult;
 
 public class HttpComponentTest extends CamelTestSupport {
 

@@ -41,8 +41,8 @@ public class SshComponentProducerTest extends SshComponentTestSupport {
 
     @Test
     public void testProducer() throws Exception {
-    	SshxConfiguration config = new SshxConfiguration();
         final String msg = "test\n";
+    	SshxConfiguration config = new SshxConfiguration();
     	config.setCommand(msg);
     	config.setHost("localhost");
     	config.setPort(port);
@@ -63,8 +63,8 @@ public class SshComponentProducerTest extends SshComponentTestSupport {
 
     @Test
     public void testReconnect() throws Exception {
-    	SshxConfiguration config = new SshxConfiguration();
         final String msg = "test\n";
+    	SshxConfiguration config = new SshxConfiguration();
         config.setCommand(msg);
     	config.setHost("localhost");
     	config.setPort(port);
@@ -82,15 +82,15 @@ public class SshComponentProducerTest extends SshComponentTestSupport {
         mock.reset();
         mock.expectedMinimumMessageCount(1);
 
-        template.sendBody("direct:ssh", msg);
+        template.sendBody("direct:ssh", config);
 
         assertMockEndpointsSatisfied();
     }
 
     @Test
     public void testConnectionTimeout() throws Exception {
-    	SshxConfiguration config = new SshxConfiguration();
         final String msg = "test\n";
+    	SshxConfiguration config = new SshxConfiguration();
         config.setCommand(msg);
 
         MockEndpoint mock = getMockEndpoint("mock:password");

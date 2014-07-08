@@ -19,12 +19,8 @@ public class HttpConsumer extends ScheduledPollConsumer {
     }
     
     protected HttpInfo executePortCheck() {
-    	HttpCheck httpCheck = new HttpCheck();
-    	
-    	// TBD: Set this during initialization
-    	httpCheck.setHost(endpoint.getHost());
-    	
-    	return httpCheck.performCheck();
+
+    	return new HttpInfo();
     }
     
 	@Override

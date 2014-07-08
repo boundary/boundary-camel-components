@@ -24,9 +24,9 @@ public class PingConsumer extends ScheduledPollConsumer {
 		Exchange exchange = endpoint.createExchange();
 		Message message = exchange.getIn();
 		
-		PingInfo status = endpoint.performCheck();
+		PingResult status = endpoint.performCheck();
 
-		message.setBody(status, PingInfo.class);
+		message.setBody(status, PingResult.class);
 
 		try {
 			// send message to next processor in the route

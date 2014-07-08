@@ -12,13 +12,13 @@ public class PortCheck extends ServiceCheck {
 		client = new TCPClient();
 	}
 	
-	protected PortInfo executeCheck() {
-		PortInfo status = new PortInfo();
+	protected PortResult executeCheck() {
+		PortResult status = new PortResult();
 		return status;
 	}
 
-	public PortInfo performCheck() {
-		PortInfo status = new PortInfo();
+	public PortResult performCheck() {
+		PortResult status = new PortResult();
 		return status;
 	}
 }

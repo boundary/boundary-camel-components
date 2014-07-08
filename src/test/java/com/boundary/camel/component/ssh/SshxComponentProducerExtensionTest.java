@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.boundary.camel.component.ping.PingInfo;
+import com.boundary.camel.component.ping.PingResult;
 
 public class SshxComponentProducerExtensionTest extends SshComponentTestSupport {
 	

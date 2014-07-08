@@ -30,7 +30,7 @@ public class PortInfoTest {
 
 	@Test
 	public void testPortInfo() {
-		PortInfo info = new PortInfo();
+		PortResult info = new PortResult();
 		assertEquals("check host","localhost",info.getHost());
 		assertEquals("check port",7,info.getPort());
 		assertEquals("check timeout",5000,info.getTimeout()); 
@@ -39,7 +39,7 @@ public class PortInfoTest {
 
 	@Test
 	public void testPortStatus() {
-		PortInfo info = new PortInfo();
+		PortResult info = new PortResult();
 		
 		info.setPortStatus(PortStatus.CONNECTED);
 		assertEquals(PortStatus.CONNECTED,info.getPortStatus());
@@ -59,7 +59,7 @@ public class PortInfoTest {
 
 	@Test
 	public void testStatus() {
-		PortInfo info = new PortInfo();
+		PortResult info = new PortResult();
 		
 		info.setStatus(ServiceStatus.FAIL);		
 		assertEquals(ServiceStatus.FAIL,info.getStatus());
@@ -70,7 +70,7 @@ public class PortInfoTest {
 	
 	@Test
 	public void testMessage() {
-		PortInfo info = new PortInfo();
+		PortResult info = new PortResult();
 		String s = "monkey";
 		info.setMessage(s);
 		assertEquals("check message",s,info.getMessage());
@@ -78,7 +78,7 @@ public class PortInfoTest {
 
 	@Test
 	public void testHost() {
-		PortInfo info = new PortInfo();
+		PortResult info = new PortResult();
 		String host = "monkey";
 		info.setHost(host);
 		assertEquals("check host",host,info.getHost());
@@ -87,7 +87,7 @@ public class PortInfoTest {
 
 	@Test
 	public void testPort() {
-		PortInfo info = new PortInfo();
+		PortResult info = new PortResult();
 		int n = 99999;
 		info.setPort(n);
 		assertEquals("check port",n,info.getPort());
@@ -96,7 +96,7 @@ public class PortInfoTest {
 
 	@Test
 	public void testToString() {
-		PortInfo info = new PortInfo();
+		PortResult info = new PortResult();
 		assertEquals("check toString()","host=localhost,port=7,timeout=5000,portStatus=",info.toString());
 	}
 }

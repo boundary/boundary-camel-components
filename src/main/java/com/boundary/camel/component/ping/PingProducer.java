@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.boundary.camel.component.port.PortConfiguration;
-import com.boundary.camel.component.port.PortInfo;
+import com.boundary.camel.component.port.PortResult;
 
 /**
  * The Ping producer.
@@ -24,7 +24,7 @@ public class PingProducer extends DefaultProducer {
     public void process(Exchange exchange) throws Exception {
     	Message in = exchange.getIn();
     	PingConfiguration configuration = in.getBody(PingConfiguration.class);
-    	PingInfo pingInfo = endpoint.performCheck(configuration);
+    	PingResult pingInfo = endpoint.performCheck(configuration);
     	in.setBody(pingInfo);
     }
 }

@@ -21,13 +21,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.boundary.camel.component.common.ServiceCheck;
-import com.boundary.camel.component.common.ServiceInfo;
+import com.boundary.camel.component.common.ServiceResult;
 import com.boundary.camel.component.common.ServiceStatus;
 
 /**
  * Implements a service check by using the ping command found in most *inix environments
  * 
- * Output from the {@link PingClient} is a instance of {@link PingInfo}
+ * Output from the {@link PingClient} is a instance of {@link PingResult}
  * 
  * @author davidg
  *
@@ -157,14 +157,14 @@ public class PingClient extends ServiceCheck {
 	}
 	
 	/**
-	 * Parses the output of ping and populates a instance of {@link PingInfo}
+	 * Parses the output of ping and populates a instance of {@link PingResult}
 	 * @param exitValue {@link int}
 	 * @param outLines {@link List}
 	 * @param errLines {@link List}
-	 * @return {@link PingInfo} 
+	 * @return {@link PingResult} 
 	 */
-	protected PingInfo parse(int exitValue, List<String> outLines,List<String> errLines) {
-		PingInfo info = new PingInfo();
+	protected PingResult parse(int exitValue, List<String> outLines,List<String> errLines) {
+		PingResult info = new PingResult();
 		Pattern roundTripTimePat = Pattern.compile(RTT_REG_EX);
 		Pattern transmitReceivePat = Pattern.compile(TRANSMITTED_RECEIVED_REG_EX);
 		Pattern noRouteToHostPat = Pattern.compile(NO_ROUTE_TO_HOST_REG_EX);
@@ -232,8 +232,8 @@ public class PingClient extends ServiceCheck {
 		return info;
 	}
 
-	protected PingInfo ping(PingConfiguration configuration) {
-		PingInfo info = null;
+	protected PingResult ping(PingConfiguration configuration) {
+		PingResult info = null;
 
 		// Configure our command line based on the OS
 		// we are running on.

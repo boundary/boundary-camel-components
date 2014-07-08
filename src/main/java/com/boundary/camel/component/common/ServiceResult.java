@@ -7,7 +7,7 @@ import java.util.Date;
  * @author davidg
  *
  */
-public class ServiceInfo {
+public class ServiceResult {
 	
 	private ServiceStatus status = ServiceStatus.SUCCESS;
 	private String message = "OK";
@@ -16,7 +16,7 @@ public class ServiceInfo {
 	private int timeOut = 5000;
 	private Date timeStamp = new Date();
 	
-	public ServiceInfo() {
+	public ServiceResult() {
 	}
 	
 	public void setStatus(ServiceStatus status) {

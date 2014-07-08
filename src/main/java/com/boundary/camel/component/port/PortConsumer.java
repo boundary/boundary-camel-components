@@ -24,9 +24,9 @@ public class PortConsumer extends ScheduledPollConsumer {
 		Exchange exchange = endpoint.createExchange();
 		Message message = exchange.getIn();
 		
-		PortInfo status = endpoint.performCheck();
+		PortResult status = endpoint.performCheck();
 
-		message.setBody(status, PortInfo.class);
+		message.setBody(status, PortResult.class);
 
 		try {
 			// send message to next processor in the route

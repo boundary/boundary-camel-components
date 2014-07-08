@@ -14,7 +14,7 @@ import com.boundary.camel.component.common.ServiceStatus;
 
 public class UrlInfoTest {
 	
-	private UrlInfo info;
+	private UrlResult info;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -26,7 +26,7 @@ public class UrlInfoTest {
 
 	@Before
 	public void setUp() throws Exception {
-		info = new UrlInfo();
+		info = new UrlResult();
 	}
 
 	@After

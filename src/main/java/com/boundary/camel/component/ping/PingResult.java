@@ -1,13 +1,13 @@
 package com.boundary.camel.component.ping;
 
-import com.boundary.camel.component.common.ServiceInfo;
+import com.boundary.camel.component.common.ServiceResult;
 
 /**
  * Contains information regarding the results of sending an ICMP ping to a host.
  * @author davidg
  *
  */
-public class PingInfo extends ServiceInfo {
+public class PingResult extends ServiceResult {
 	
 	private String host;
 	private int ttl;
@@ -19,7 +19,7 @@ public class PingInfo extends ServiceInfo {
 	private double rttMax;
 	private double rttMDev;
 
-	public PingInfo() {
+	public PingResult() {
 		host = "localhost";
 	}
 	
