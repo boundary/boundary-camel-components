@@ -11,7 +11,6 @@ import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.shell.InvertedShellWrapper;
 import org.apache.sshd.server.shell.ProcessShellFactory;
-
 import org.apache.sshd.server.shell.ProcessShellFactory.TtyOptions;
 
 /**
@@ -20,7 +19,7 @@ import org.apache.sshd.server.shell.ProcessShellFactory.TtyOptions;
  * @author davidg
  *
  */
-public class SSHMockServer {
+public class MockSSHServer {
 	
 	private static final int DEFAULT_SSH_PORT=22;
 	private static final int DEFAULT_SSH_TIMEOUT=5000;
@@ -41,15 +40,15 @@ public class SSHMockServer {
 	    }
 	}
 
-	public SSHMockServer() {
+	public MockSSHServer() {
 		this(DEFAULT_SSH_PORT,DEFAULT_SSH_TIMEOUT);
 	}
 	
-	public SSHMockServer(int port) {
+	public MockSSHServer(int port) {
 		this(port,DEFAULT_SSH_TIMEOUT);
 	}
 	
-	public SSHMockServer(int port,int timeOut) {
+	public MockSSHServer(int port,int timeOut) {
 		this.port = port;
 		this.timeOut = timeOut;
 		sshd = SshServer.setUpDefaultServer();
@@ -63,7 +62,7 @@ public class SSHMockServer {
 		sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider("hostkey.ser"));
         //sshd.setKeyPairProvider(Utils.createTestHostKeyProvider());
         //sshd.setSubsystemFactories(Arrays.<NamedFactory<Command>>asList(new SftpSubsystem.Factory()));
-		EnumSet<ProcessShellFactory.TtyOptions> options = EnumSet.of(TtyOptions.ONlCr	);
+		EnumSet<ProcessShellFactory.TtyOptions> options = EnumSet.of(TtyOptions.ONlCr);
 		sshd.setShellFactory(new ProcessShellFactory(new String[] { "/bin/bash", "-i","-l"},options));
 		// sshd.setShellFactory(new InvertedShellWrapper(new String[] { "/bin/bash", "-i","-l"}));
 
@@ -79,12 +78,17 @@ public class SSHMockServer {
 			e.printStackTrace();
 		}
 	}
-
-	public static void main(String[] args) {
-		SSHMockServer server = new SSHMockServer(12345);
-		
-		server.start();
+	
+	public void stop() {
+		try {
+			sshd.stop(true);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
-
+	public static void main(String[] args) {
+		MockSSHServer server = new MockSSHServer(12345);
+		server.start();
+	}
 }
