@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 
+import org.apache.camel.component.ssh.FileKeyPairProvider;
 import org.apache.sshd.SshServer;
 import org.apache.sshd.server.PasswordAuthenticator;
 import org.apache.sshd.server.command.ScpCommandFactory;
@@ -59,7 +60,7 @@ public class MockSSHServer {
 		// Set the port to bind the socket to
 		sshd.setPort(port);
         //sshd.getProperties().put(SshServer.IDLE_TIMEOUT,Integer.toString(timeOut));
-		sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider("hostkey.ser"));
+        sshd.setKeyPairProvider(new FileKeyPairProvider(new String[]{"src/test/resources/hostkey.pem"}));
         //sshd.setKeyPairProvider(Utils.createTestHostKeyProvider());
         //sshd.setSubsystemFactories(Arrays.<NamedFactory<Command>>asList(new SftpSubsystem.Factory()));
 		EnumSet<ProcessShellFactory.TtyOptions> options = EnumSet.of(TtyOptions.ONlCr);
