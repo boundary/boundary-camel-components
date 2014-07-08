@@ -31,11 +31,11 @@ public class SshxConsumer extends ScheduledPollConsumer {
 
     @Override
     protected int poll() throws Exception {
-        String command = endpoint.getPollCommand();
-        SshResult result = endpoint.sendExecCommand(command);
+    	SshxConfiguration config = endpoint.getConfiguration();
+        SshxResult result = endpoint.sendExecCommand(config);
 
         Exchange exchange = endpoint.createExchange();
-        exchange.getIn().setBody(result.getStdout());
+        exchange.getIn().setBody(result);
         exchange.getIn().setHeader(SshResult.EXIT_VALUE, result.getExitValue());
         exchange.getIn().setHeader(SshResult.STDERR, result.getStderr());
 

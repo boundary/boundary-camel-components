@@ -80,14 +80,15 @@ public class SshxEndpoint extends ScheduledPollEndpoint {
         return false;
     }
 
-    public SshResult sendExecCommand(String command) throws Exception {
-        SshResult result = null;
+    public SshxResult sendExecCommand(SshxConfiguration config) throws Exception {
+        SshxResult result = null;
+        String command = config.getCommand();
 
         if (getConfiguration() == null) {
             throw new IllegalStateException("Configuration must be set");
         }
 
-        ConnectFuture connectFuture = client.connect(getHost(), getPort());
+        ConnectFuture connectFuture = client.connect(getUsername(), getHost(), getPort());
 
         // Wait getTimeout milliseconds for connect operation to complete
         connectFuture.await(getTimeout());
@@ -146,10 +147,10 @@ public class SshxEndpoint extends ScheduledPollEndpoint {
             openFuture.await(getTimeout());
             if (openFuture.isOpened()) {
                 channel.waitFor(ClientChannel.CLOSED, 0);
-                result = new SshResult(command, channel.getExitStatus(),
+                result = new SshxResult(command,
+                		channel.getExitStatus(),
                         new ByteArrayInputStream(out.toByteArray()),
                         new ByteArrayInputStream(err.toByteArray()));
-    
             }
             return result;
         } finally {

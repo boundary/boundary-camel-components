@@ -29,13 +29,16 @@ public class SshxConfiguration implements Cloneable {
     public static final int DEFAULT_SSH_PORT = 22;
 
     @UriParam
-    private String username;
+    private String username = "";
     @UriParam
     private String host;
     @UriParam
     private int port = DEFAULT_SSH_PORT;
     @UriParam
-    private String password;
+    private String password = "";
+    
+    // To preserve backward compatability we preserve this
+    // URI parameter but assign to the 'command' URI parameter
     @UriParam
     private String pollCommand;
     private KeyPairProvider keyPairProvider;
@@ -45,6 +48,8 @@ public class SshxConfiguration implements Cloneable {
     private String certResource;
     @UriParam
     private long timeout = 30000;
+    @UriParam
+    private String command;
 
     public SshxConfiguration() {
     }
@@ -140,7 +145,7 @@ public class SshxConfiguration implements Cloneable {
     }
 
     public String getPollCommand() {
-        return pollCommand;
+        return command;
     }
 
     /**
@@ -150,7 +155,7 @@ public class SshxConfiguration implements Cloneable {
      * @param pollCommand String representing the command to send.
      */
     public void setPollCommand(String pollCommand) {
-        this.pollCommand = pollCommand;
+        this.command = pollCommand;
     }
 
     public KeyPairProvider getKeyPairProvider() {
@@ -226,4 +231,12 @@ public class SshxConfiguration implements Cloneable {
     public void setCertResource(String certResource) {
         this.certResource = certResource;
     }
+
+	public String getCommand() {
+		return this.command;
+	}
+	
+	public void setCommand(String command) {
+		this.command = command;
+	}
 }

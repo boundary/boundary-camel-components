@@ -21,8 +21,13 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.ssh.SshResult;
 import org.apache.camel.impl.DefaultProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SshxProducer extends DefaultProducer {
+	
+    protected final Logger LOG = LoggerFactory.getLogger(getClass());
+    
     private SshxEndpoint endpoint;
 
     public SshxProducer(SshxEndpoint endpoint) {
@@ -33,13 +38,16 @@ public class SshxProducer extends DefaultProducer {
     @Override
     public void process(Exchange exchange) throws Exception {
         final Message in = exchange.getIn();
-        String command = in.getMandatoryBody(String.class);
+        SshxConfiguration config = in.getMandatoryBody(SshxConfiguration.class);
+        endpoint.setConfiguration(config);
+        
+        final String command = config.getCommand();
 
         try {
-            SshResult result = endpoint.sendExecCommand(command);
-            exchange.getOut().setBody(result.getStdout());
-            exchange.getOut().setHeader(SshResult.EXIT_VALUE, result.getExitValue());
-            exchange.getOut().setHeader(SshResult.STDERR, result.getStderr());
+            SshxResult result = endpoint.sendExecCommand(config);
+            exchange.getOut().setBody(result);
+            exchange.getOut().setHeader(SshxResult.EXIT_VALUE, result.getExitValue());
+            exchange.getOut().setHeader(SshxResult.STDERR, result.getStderr());
         } catch (Exception e) {
             throw new CamelExchangeException("Cannot execute command: " + command, exchange, e);
         }

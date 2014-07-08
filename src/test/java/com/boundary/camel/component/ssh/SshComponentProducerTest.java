@@ -16,37 +16,63 @@
  */
 package com.boundary.camel.component.ssh;
 
+import java.util.List;
+
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.component.ssh.SshResult;
+import org.apache.camel.test.AvailablePortFinder;
 import org.junit.Test;
 
 public class SshComponentProducerTest extends SshComponentTestSupport {
+	
+	
+    @Override
+    public void setUp() throws Exception {
+    	super.setUp();
+    }
+    
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+    }
+
 
     @Test
     public void testProducer() throws Exception {
+    	SshxConfiguration config = new SshxConfiguration();
         final String msg = "test\n";
+    	config.setCommand(msg);
+    	config.setHost("localhost");
+    	config.setPort(port);
+
 
         MockEndpoint mock = getMockEndpoint("mock:password");
         mock.expectedMinimumMessageCount(1);
-        mock.expectedBodiesReceived(msg);
-        mock.expectedHeaderReceived(SshResult.EXIT_VALUE, 0);
-        mock.expectedHeaderReceived(SshResult.STDERR, "Error:test\n");
 
-        template.sendBody("direct:ssh", msg);
+        template.sendBody("direct:ssh", config);
 
         assertMockEndpointsSatisfied();
+        
+        List<Exchange> exchanges = mock.getExchanges();
+        for (Exchange e : exchanges) {
+        	System.out.println(e.toString());
+        }
     }
 
     @Test
     public void testReconnect() throws Exception {
+    	SshxConfiguration config = new SshxConfiguration();
         final String msg = "test\n";
+        config.setCommand(msg);
+    	config.setHost("localhost");
+    	config.setPort(port);
 
         MockEndpoint mock = getMockEndpoint("mock:password");
         mock.expectedMinimumMessageCount(1);
-        mock.expectedBodiesReceived(msg);
 
-        template.sendBody("direct:ssh", msg);
+        template.sendBody("direct:ssh", config);
 
         assertMockEndpointsSatisfied();
 
@@ -55,7 +81,6 @@ public class SshComponentProducerTest extends SshComponentTestSupport {
 
         mock.reset();
         mock.expectedMinimumMessageCount(1);
-        mock.expectedBodiesReceived(msg);
 
         template.sendBody("direct:ssh", msg);
 
@@ -64,7 +89,9 @@ public class SshComponentProducerTest extends SshComponentTestSupport {
 
     @Test
     public void testConnectionTimeout() throws Exception {
+    	SshxConfiguration config = new SshxConfiguration();
         final String msg = "test\n";
+        config.setCommand(msg);
 
         MockEndpoint mock = getMockEndpoint("mock:password");
         mock.expectedMinimumMessageCount(0);
@@ -75,10 +102,12 @@ public class SshComponentProducerTest extends SshComponentTestSupport {
         sshd.stop();
         sshd = null;
 
-        template.sendBody("direct:ssh", msg);
+        template.sendBody("direct:ssh", config);
 
         assertMockEndpointsSatisfied();
     }
+    
+
 
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception {
@@ -90,8 +119,9 @@ public class SshComponentProducerTest extends SshComponentTestSupport {
                         .to("mock:error");
 
                 from("direct:ssh")
-                        .to("ssh://smx:smx@localhost:" + port + "?timeout=3000")
+                        .to("sshx://smx:smx@localhost:" + port + "?timeout=3000")
                         .to("mock:password");
+
             }
         };
     }
