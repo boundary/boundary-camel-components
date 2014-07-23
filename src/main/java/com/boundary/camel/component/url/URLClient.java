@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ConnectException;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
@@ -18,6 +19,7 @@ import java.nio.channels.IllegalBlockingModeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.boundary.camel.component.common.ServiceCheck;
 import com.boundary.camel.component.ping.PingClient;
 
 /**
@@ -33,12 +35,14 @@ import com.boundary.camel.component.ping.PingClient;
  * @author davidg
  * 
  */
-public class URLClient {
+public class URLClient extends ServiceCheck {
 
 	private static final Logger LOG = LoggerFactory.getLogger(URLClient.class);
 	
 	private URLStatus urlStatus;
 	private String message;
+
+	private int connectTimeout;
 
 	public URLClient() {
 	}
@@ -66,6 +70,10 @@ public class URLClient {
 		try {
 			URI uri = new URI(s);
 			URL url = uri.toURL();
+			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+			
+			urlConnection.setConnectTimeout(connectTimeout);
+
 			BufferedReader bin = new BufferedReader(new InputStreamReader(url.openStream()));
 			String line;
 			String content = url.getContent().getClass().toString();
@@ -75,6 +83,7 @@ public class URLClient {
 			}
 
 		} catch (FileNotFoundException f) {
+			System.out.println("FileNotFoundException");
 			f.printStackTrace();
 		}
 		catch (UnknownHostException u) {
@@ -90,7 +99,7 @@ public class URLClient {
 
 	public static void main(String[] args) {
 		URLClient client = new URLClient();
-		String uri = "http://www.google.com/search?q=cats";
+		String uri = "http://localhost";
 		client.connect(uri);
 		System.out.println("status: " + client.getURLStatus());
 	}

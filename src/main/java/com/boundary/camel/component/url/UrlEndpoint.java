@@ -1,4 +1,4 @@
-package com.boundary.camel.component.http;
+package com.boundary.camel.component.url;
 
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
@@ -10,16 +10,16 @@ import com.boundary.camel.component.common.ServiceEndpoint;
 /**
  * Implements a Camel {@link Endpoint} to check a port
  */
-public class HttpEndpoint extends ServiceEndpoint {
+public class UrlEndpoint extends ServiceEndpoint {
 	
-    public HttpEndpoint() {
+    public UrlEndpoint() {
     }
 
-    public HttpEndpoint(String uri, HttpComponent component) {
+    public UrlEndpoint(String uri, UrlComponent component) {
         super(uri, component);
      }
 
-	public HttpEndpoint(String endpointUri) {
+	public UrlEndpoint(String endpointUri) {
         super(endpointUri);
     }
     
@@ -27,11 +27,11 @@ public class HttpEndpoint extends ServiceEndpoint {
      * Creates the producer for the component.
      */
     public Producer createProducer() throws Exception {
-        return new HttpProducer(this);
+        return new UrlProducer(this);
     }
 
     public Consumer createConsumer(Processor processor) throws Exception {
-    	HttpConsumer consumer = new HttpConsumer(this, processor);
+    	UrlConsumer consumer = new UrlConsumer(this, processor);
         return consumer;
     }
 

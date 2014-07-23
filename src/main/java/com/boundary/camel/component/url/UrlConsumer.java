@@ -1,4 +1,4 @@
-package com.boundary.camel.component.http;
+package com.boundary.camel.component.url;
 
 import java.util.Date;
 
@@ -7,20 +7,21 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.impl.ScheduledPollConsumer;
 
+
 /**
  * The Ping consumer.
  */
-public class HttpConsumer extends ScheduledPollConsumer {
-    private final HttpEndpoint endpoint;
+public class UrlConsumer extends ScheduledPollConsumer {
+    private final UrlEndpoint endpoint;
 
-    public HttpConsumer(HttpEndpoint endpoint, Processor processor) {
+    public UrlConsumer(UrlEndpoint endpoint, Processor processor) {
         super(endpoint, processor);
         this.endpoint = endpoint;
     }
     
-    protected HttpInfo executePortCheck() {
+    protected UrlResult executePortCheck() {
 
-    	return new HttpInfo();
+    	return new UrlResult();
     }
     
 	@Override
@@ -29,9 +30,9 @@ public class HttpConsumer extends ScheduledPollConsumer {
 		Exchange exchange = endpoint.createExchange();
 		Message message = exchange.getIn();
 		
-		HttpInfo status = executePortCheck();
+		UrlResult status = executePortCheck();
 
-		message.setBody(status, HttpInfo.class);
+		message.setBody(status, UrlResult.class);
 
 		try {
 			// send message to next processor in the route

@@ -1,4 +1,4 @@
-package com.boundary.camel.component.http;
+package com.boundary.camel.component.url;
 
 import java.util.Map;
 
@@ -8,10 +8,10 @@ import org.apache.camel.impl.DefaultComponent;
 /**
  * Represents the component that manages {@link HttpEndpoint}.
  */
-public class HttpComponent extends DefaultComponent {
+public class UrlComponent extends DefaultComponent {
 
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-        Endpoint endpoint = new HttpEndpoint(uri, this);
+        Endpoint endpoint = new UrlEndpoint(uri, this);
         setProperties(endpoint, parameters);
         return endpoint;
     }
