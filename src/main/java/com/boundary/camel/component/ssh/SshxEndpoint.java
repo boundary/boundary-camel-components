@@ -25,7 +25,6 @@ import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.component.ssh.ResourceHelperKeyPairProvider;
-import org.apache.camel.component.ssh.SshResult;
 import org.apache.camel.impl.ScheduledPollEndpoint;
 import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
@@ -44,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 @UriEndpoint(scheme = "sshx", consumerClass = SshxConsumer.class)
 public class SshxEndpoint extends ScheduledPollEndpoint {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private SshClient client;
     @UriParam
@@ -87,19 +86,26 @@ public class SshxEndpoint extends ScheduledPollEndpoint {
         if (getConfiguration() == null) {
             throw new IllegalStateException("Configuration must be set");
         }
+        
+        ConnectFuture connectFuture = null;
 
-        ConnectFuture connectFuture = client.connect(getUsername(), getHost(), getPort());
+		try {
 
-        // Wait getTimeout milliseconds for connect operation to complete
-        connectFuture.await(getTimeout());
+			connectFuture = client.connect(getUsername(), getHost(), getPort());
+
+			// Wait getTimeout milliseconds for connect operation to complete
+			connectFuture.await(getTimeout());
+		} catch (Exception e) {
+			LOG.info("EXCEPTION: " + e.getClass().toString());
+		}
 
         if (!connectFuture.isDone() || !connectFuture.isConnected()) {
             final String msg = "Failed to connect to " + getHost() + ":" + getPort() + " within timeout " + getTimeout() + "ms";
-            log.debug(msg);
+            LOG.info(msg);
             throw new RuntimeCamelException(msg);
         }
 
-        log.debug("Connected to {}:{}", getHost(), getPort());
+        LOG.debug("Connected to {}:{}", getHost(), getPort());
 
         ClientChannel channel = null;
         ClientSession session = null;
@@ -111,25 +117,25 @@ public class SshxEndpoint extends ScheduledPollEndpoint {
             KeyPairProvider keyPairProvider;
             final String certResource = getCertResource();
             if (certResource != null) {
-                log.debug("Attempting to authenticate using ResourceKey '{}'...", certResource);
+                LOG.debug("Attempting to authenticate using ResourceKey '{}'...", certResource);
                 keyPairProvider = new ResourceHelperKeyPairProvider(new String[]{certResource}, getCamelContext().getClassResolver());
             } else {
                 keyPairProvider = getKeyPairProvider();
             }
     
             if (keyPairProvider != null) {
-                log.debug("Attempting to authenticate username '{}' using Key...", getUsername());
+                LOG.debug("Attempting to authenticate username '{}' using Key...", getUsername());
                 KeyPair pair = keyPairProvider.loadKey(getKeyType());
                 authResult = session.authPublicKey(getUsername(), pair);
             } else {
-                log.debug("Attempting to authenticate username '{}' using Password...", getUsername());
+                LOG.debug("Attempting to authenticate username '{}' using Password...", getUsername());
                 authResult = session.authPassword(getUsername(), getPassword());
             }
     
             authResult.await(getTimeout());
     
             if (!authResult.isDone() || authResult.isFailure()) {
-                log.debug("Failed to authenticate");
+                LOG.debug("Failed to authenticate");
                 throw new RuntimeCamelException("Failed to authenticate username " + getUsername());
             }
         
@@ -162,7 +168,6 @@ public class SshxEndpoint extends ScheduledPollEndpoint {
                 session.close(false);
             }
         }
-        
     }
 
     @Override
