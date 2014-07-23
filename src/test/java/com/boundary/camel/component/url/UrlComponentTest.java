@@ -1,4 +1,4 @@
-package com.boundary.camel.component.http;
+package com.boundary.camel.component.url;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -11,9 +11,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.boundary.camel.component.common.ServiceStatus;
-import com.boundary.camel.component.port.PortResult;
 
-public class HttpComponentTest extends CamelTestSupport {
+
+public class UrlComponentTest extends CamelTestSupport {
 
     @Test
     public void testHttp() throws Exception {
@@ -24,9 +24,9 @@ public class HttpComponentTest extends CamelTestSupport {
         mock.assertIsSatisfied();
         List <Exchange> receivedExchanges = mock.getReceivedExchanges();
         for(Exchange e: receivedExchanges) {
-        	HttpInfo status = e.getIn().getBody(HttpInfo.class);
+        	UrlResult result = e.getIn().getBody(UrlResult.class);
         	
-        	assertTrue("check http status",status.getStatus() == ServiceStatus.SUCCESS);
+        	assertTrue("check http status",result.getStatus() == ServiceStatus.SUCCESS);
         }
     }
     
