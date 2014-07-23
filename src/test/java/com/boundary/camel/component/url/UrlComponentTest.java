@@ -16,7 +16,7 @@ import com.boundary.camel.component.common.ServiceStatus;
 public class UrlComponentTest extends CamelTestSupport {
 
     @Test
-    public void testHttp() throws Exception {
+    public void testUrl() throws Exception {
         MockEndpoint mock = getMockEndpoint("mock:result");
         mock.expectedMessageCount(1);
         mock.await(5, TimeUnit.SECONDS);
@@ -26,7 +26,7 @@ public class UrlComponentTest extends CamelTestSupport {
         for(Exchange e: receivedExchanges) {
         	UrlResult result = e.getIn().getBody(UrlResult.class);
         	
-        	assertTrue("check http status",result.getStatus() == ServiceStatus.SUCCESS);
+        	assertTrue("check url status",result.getStatus() == ServiceStatus.SUCCESS);
         }
     }
     
@@ -35,7 +35,7 @@ public class UrlComponentTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("http://foo?host=localhost&delay=5")
+                from("url://foo?host=localhost&delay=5")
                   .to("mock:result");
             }
         };
