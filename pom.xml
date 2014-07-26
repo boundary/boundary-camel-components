@@ -20,7 +20,6 @@
     <bouncycastle-version>1.49</bouncycastle-version>
     <camel-version>2.13.1</camel-version>
     <commons-exec-version>1.2</commons-exec-version>
-    <mina-version>2.0.7</mina-version>
     <spring-version>3.2.5.RELEASE</spring-version>
     <spring-security-version>3.1.4.RELEASE</spring-security-version>
     <sshd-version>0.11.0</sshd-version>
@@ -60,9 +59,9 @@
       <version>${camel-version}</version>
     </dependency>
     <dependency>
-        <groupId>org.apache.commons</groupId>
-	    <artifactId>commons-exec</artifactId>
-	    <version>${commons-exec-version}</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-exec</artifactId>
+      <version>${commons-exec-version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.sshd</groupId>
@@ -79,21 +78,6 @@
       <artifactId>bcpkix-jdk15on</artifactId>
       <version>${bouncycastle-version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <version>${spring-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-      <version>${spring-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <version>${spring-version}</version>
-    </dependency>    
     <!-- logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
