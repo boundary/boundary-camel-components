@@ -1,29 +1,22 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2014 Boundary, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package com.boundary.camel.component.ssh;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.boundary.camel.component.common.ServiceResult;
 
@@ -51,30 +44,49 @@ public class SshxResult extends ServiceResult {
 
 	private final InputStream stderr;
 
-	public SshxResult(String command, int exitValue, InputStream out,
-			InputStream err) {
+	public SshxResult(String command,int exitValue,InputStream out,InputStream err) {
 		this.command = command;
 		this.exitValue = exitValue;
 		this.stdout = out;
 		this.stderr = err;
 	}
 
+	/**
+	 * Returns the command that generated the results
+	 * @return {@link String} comand that was run
+	 */
 	public String getCommand() {
 		return command;
 	}
 
+	/**
+	 * Exit value of the command that was run
+	 * @return {@link int} result code
+	 */
 	public int getExitValue() {
 		return exitValue;
 	}
 
+	/**
+	 * Returns the {@link InputStream} associated with the standard error from the command that was run.
+	 * @return {@link InputStream} contain standard out
+	 */
 	public InputStream getStdout() {
 		return stdout;
 	}
-
+	
+	/**
+	 * Returns the {@link InputStream} associated with the standard out from the command that was run.
+	 * @return {@link InputStream} contain standard error
+	 */
 	public InputStream getStderr() {
 		return stderr;
 	}
 
+	/**
+	 * Returns the standard output of the command ran into a {@link String}.
+	 * @return {@link String} contain standard output
+	 */
 	public String getOutput() {
 		InputStreamReader is = new InputStreamReader(stdout);
 		StringBuilder sb = new StringBuilder();
@@ -94,6 +106,10 @@ public class SshxResult extends ServiceResult {
 		return sb.toString();
 	}
 
+	/**
+	 * Returns the string representations of an instance of {@link SshxResult}
+	 * @return {@link String}
+	 */
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("exitValue=" + exitValue);
