@@ -110,11 +110,9 @@ public class SshxResult extends ServiceResult {
 	 * Returns the string representations of an instance of {@link SshxResult}
 	 * @return {@link String}
 	 */
+	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("exitValue=" + exitValue);
-		sb.append("command=" + command);
-		sb.append("output=" + getOutput());
-		return sb.toString();
+		return "SshxResult [command=" + command + ", exitValue=" + exitValue
+				+ ", stdout=" + stdout + ", stderr=" + stderr + "]";
 	}
 }
