@@ -21,17 +21,26 @@ import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.spi.UriParam;
 
 import com.boundary.camel.component.common.ServiceCheckBaseConfiguration;
+import com.boundary.camel.component.ping.PingConfiguration;
 
 
 public class UrlConfiguration extends ServiceCheckBaseConfiguration implements Cloneable {
+	
+	private final static int EMPTY_PORT = -1;
+	private final static String EMPTY_PATH = "";
+	private final static String EMPTY_QUERY = "";
 	
 	@UriParam
 	String scheme;
 	@UriParam
 	String query;
 	
+	String url;
+	
 	public UrlConfiguration() {
 		scheme = "http";
+//		setPath(EMPTY_PATH);
+//		setPort(EMPTY_PORT);
 	}
 	
 	/**
@@ -70,7 +79,9 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 		sb.append(getPort() == DEFAULT_PORT ? "" : ":" + getPort());
 		sb.append("/");
 		sb.append(getPath() == null ? "" : getPath());
-		sb.append(getQuery());
+		if (getQuery() != null) {
+			sb.append("?"+getQuery());
+		}
 
 		URL url = null;
 		url = new URL(sb.toString());
@@ -128,5 +139,13 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 
 	public void setQuery(String query) {
 		this.query = query;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }
