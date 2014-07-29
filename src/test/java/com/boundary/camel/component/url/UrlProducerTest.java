@@ -13,7 +13,8 @@
 // limitations under the License.
 package com.boundary.camel.component.url;
 
-import java.net.URL;
+import static java.net.HttpURLConnection.*;
+
 import java.util.List;
 
 import org.apache.camel.EndpointInject;
@@ -23,12 +24,9 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
-import static java.net.HttpURLConnection.*;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class UrlProducerTest extends CamelTestSupport {
 	
