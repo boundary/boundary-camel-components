@@ -32,21 +32,15 @@ public class UrlComponentTest extends CamelTestSupport {
     @Test
     public void testUrl() throws Exception {
     	UrlConfiguration urlConfiguration = new UrlConfiguration();
-    	
         out.expectedMessageCount(1);
-        out.await(5, TimeUnit.SECONDS);
-        
         out.assertIsSatisfied();
-        List <Exchange> exchanges = mock.getExchanges();
+        
+        List <Exchange> exchanges = out.getExchanges();
     	LOG.info("EXCHANGE COUNT: " + exchanges.size());
 
         for(Exchange e: exchanges) {
         	UrlResult result = e.getIn().getBody(UrlResult.class);
-        	
-        	assertTrue("check url status",result.getStatus() == ServiceStatus.SUCCESS);
-        	LOG.info(result.getURL());
-        	LOG.info(result.getHost());
-        	//assertEquals("url does not match","")
+        	assertEquals("response code unexpected",200,result.getResponseCode());
         }
     }
 
@@ -54,8 +48,8 @@ public class UrlComponentTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("url://localhost?delay=5")
-                  .to("mock:result");
+                from("url://localhost")
+                  .to("mock:url-out");
             }
         };
     }

@@ -101,10 +101,17 @@ public class UrlConfigurationTest {
 	}
 	
 	@Test
-	public void testSetUrl() {
-		String url = "scheme://username:password@domain:port/path?query_string#fragment_id";
+	public void testSetUrl() throws MalformedURLException {
+		URL url = new URL("http://username:password@domain:8080/path?query_string#fragment_id");
 		urlConfiguration.setUrl(url);
 		assertEquals("url not equal",url,urlConfiguration.getUrl());
+	}
+	
+	@Test
+	public void testToUrl() throws MalformedURLException {
+		URL url = new URL("http://username:password@domain:8080/path?query_string#fragment_id");
+		urlConfiguration.setUrl(url);
+		assertEquals("url not equal",url,urlConfiguration.toURL());
 	}
 	
 	@Test

@@ -34,8 +34,10 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 	String scheme;
 	@UriParam
 	String query;
+	@UriParam
+	String requestMethod;
 	
-	String url;
+	URL url;
 	
 	public UrlConfiguration() {
 		scheme = "http";
@@ -65,6 +67,11 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
     }
     
 	public URL toURL() throws MalformedURLException {
+		URL url = null;
+		if (this.url != null) {
+			url = this.url;
+		}
+		else {
 		StringBuffer sb = new StringBuffer();
 		sb.append(getScheme());
 		sb.append("://");
@@ -83,8 +90,8 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 			sb.append("?"+getQuery());
 		}
 
-		URL url = null;
 		url = new URL(sb.toString());
+		}
 		
 		return url;
 	}
@@ -141,11 +148,11 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 		this.query = query;
 	}
 
-	public String getUrl() {
+	public URL getUrl() {
 		return url;
 	}
 
-	public void setUrl(String url) {
+	public void setUrl(URL url) {
 		this.url = url;
 	}
 }
