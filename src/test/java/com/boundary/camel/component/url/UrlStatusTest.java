@@ -28,7 +28,7 @@ public class UrlStatusTest {
 
 	@Test
 	public void testOK() {
-		assertEquals("check OK","OK",URLStatus.OK.toString());
+		assertEquals("check OK","OK",UrlStatus.OK.toString());
 	}
 
 }

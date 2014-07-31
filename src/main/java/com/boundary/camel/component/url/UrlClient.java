@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import static java.net.HttpURLConnection.*;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
@@ -29,7 +30,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.nio.channels.IllegalBlockingModeException;
+import static com.boundary.camel.component.url.UrlStatus.*;
+
+import org.apache.commons.codec.binary.Base64;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,20 +45,22 @@ import com.boundary.camel.component.common.ServiceCheck;
  * 
  */
 public class UrlClient extends ServiceCheck {
-
-	private static final Logger LOG = LoggerFactory.getLogger(UrlClient.class);
 	
-	private URLStatus urlStatus;
+	private final static int UNDEFINED_HTTP_RESPONSE=0;
+	
+	private final static double NANO_SECONDS_TO_MILLI_SECONDS = 1E-6;
+	private final static Logger LOG = LoggerFactory.getLogger(UrlClient.class);
+	
+	private UrlStatus urlStatus;
 	private InputStream content;
 	private HttpURLConnection connection;
 
 	private int connectTimeout;
 	private String output;
-	private int responseCode;
+	private int responseCode =  UNDEFINED_HTTP_RESPONSE;
 
 	private UrlConfiguration configuration;
 
-	private double NANO_SECONDS_TO_MILLI_SECONDS = 1E-6;
 
 	private long elapsedTime;
 
@@ -67,8 +72,12 @@ public class UrlClient extends ServiceCheck {
 	 * 
 	 * @return {@link URLStatus}
 	 */
-	public URLStatus getURLStatus() {
+	public UrlStatus getURLStatus() {
 		return urlStatus;
+	}
+	
+	public void setURLStatus(UrlStatus urlStatus) {
+		this.urlStatus = urlStatus;
 	}
 
 	public static UrlClient setUpDefaultClient() {
@@ -107,8 +116,26 @@ public class UrlClient extends ServiceCheck {
 			
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setConnectTimeout(connectTimeout);
+			connection.setRequestMethod(configuration.getRequestMethod());
+			connection.setInstanceFollowRedirects(configuration.getFollowRedirects());
+			
+			if (configuration.getUser() != null ||
+				configuration.getPassword() != null) {
+				StringBuffer sb = new StringBuffer();
+				if (configuration.getUser() != null) {
+					sb.append(configuration.getUser());
+				}
+				sb.append(":");
+				if (configuration.getPassword() != null) {
+					sb.append(configuration.getPassword());
+				}
+				connection.setRequestProperty("Authorization", "Basic "  + Base64.encodeBase64String(sb.toString().getBytes()));
+			}
+		
 			connection.connect();
+			LOG.error("CONNECTED");
 			responseCode = connection.getResponseCode();
+
 			
 			BufferedReader is = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			
@@ -119,19 +146,35 @@ public class UrlClient extends ServiceCheck {
 			}
 			
 			output = sb.toString();
-
-		} catch (FileNotFoundException f) {
-			System.out.println("FileNotFoundException");
-			f.printStackTrace();
-		}
+			setURLStatus(OK);
+		} 
 		catch (UnknownHostException u) {
-			u.printStackTrace();
+			setURLStatus(UNKNOWN_HOST);
+			responseCode = HTTP_BAD_GATEWAY;
+			if (LOG.isDebugEnabled()) {
+				u.printStackTrace();
+			}
+		}
+		catch (SocketTimeoutException s) {
+			setURLStatus(TIME_OUT);
+			responseCode = HTTP_INTERNAL_ERROR;
+			if (LOG.isDebugEnabled()) {
+				s.printStackTrace();
+			}
 		}
 		catch (IOException i) {
-			i.printStackTrace();
+			setURLStatus(ERROR);
+			responseCode = HTTP_INTERNAL_ERROR;
+			if (LOG.isDebugEnabled()) {
+				i.printStackTrace();
+			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			setURLStatus(ERROR);
+			responseCode = HTTP_INTERNAL_ERROR;
+			if (LOG.isDebugEnabled()) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

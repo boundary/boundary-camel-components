@@ -16,22 +16,26 @@ package com.boundary.camel.component.url;
 import java.net.URL;
 
 import com.boundary.camel.component.common.ServiceResult;
+import static com.boundary.camel.component.url.UrlStatus.*;
 
 public class UrlResult extends ServiceResult {
 	
-	private URLStatus urlStatus;
+	private UrlStatus urlStatus;
 	private URL url;
 	private long elapsedTime;
 	private int responseCode;
+	private String requestMethod;
+
 
 	UrlResult() {
+		urlStatus = OK;
 	}
 
-	public void setURLStatus(URLStatus urlStatus) {
+	public void setURLStatus(UrlStatus urlStatus) {
 		this.urlStatus = urlStatus;
 	}
 	
-	public URLStatus getURLStatus() {
+	public UrlStatus getURLStatus() {
 		return this.urlStatus;
 	}
 	
@@ -67,4 +71,13 @@ public class UrlResult extends ServiceResult {
 	public void setResponseCode(int responseCode) {
 		this.responseCode = responseCode;
 	}
+	
+	public String getRequestMethod() {
+		return requestMethod;
+	}
+
+	public void setRequestMethod(String requestMethod) {
+		this.requestMethod = requestMethod;
+	}
+
 }

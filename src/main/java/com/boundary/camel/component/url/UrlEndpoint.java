@@ -95,11 +95,8 @@ public class UrlEndpoint extends ServiceEndpoint {
     }
     
     public UrlResult performCheck(UrlConfiguration configuration) {
-    	UrlResult result = new UrlResult();
-    	long start = System.nanoTime();    
+    	UrlResult result = new UrlResult();   
     	client.connect(configuration);
-    	long elapsedTime = System.nanoTime() - start;
-    	result.setElapsedTime((long)(elapsedTime*NANO_SECONDS_TO_MILLI_SECONDS));
     	setUrlResult(result,configuration,client);
     	return result;
     }

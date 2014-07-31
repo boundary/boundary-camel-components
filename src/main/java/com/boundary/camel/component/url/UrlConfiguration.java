@@ -31,16 +31,19 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 	private final static String EMPTY_QUERY = "";
 	
 	@UriParam
-	String scheme;
+	private String scheme;
 	@UriParam
-	String query;
+	private String query;
 	@UriParam
-	String requestMethod;
+	private String requestMethod;
 	
 	URL url;
+	private boolean followRedirects;
 	
 	public UrlConfiguration() {
 		scheme = "http";
+		followRedirects=true;
+		requestMethod = "GET";
 //		setPath(EMPTY_PATH);
 //		setPort(EMPTY_PORT);
 	}
@@ -154,5 +157,18 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 
 	public void setUrl(URL url) {
 		this.url = url;
+	}
+
+	public void setFollowRedirects(boolean followRedirects) {
+		this.followRedirects = followRedirects;
+	}
+
+	public boolean getFollowRedirects() {
+		return followRedirects;
+	}
+
+	public String getRequestMethod() {
+		// TODO Auto-generated method stub
+		return requestMethod;
 	}
 }

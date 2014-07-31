@@ -14,7 +14,9 @@
 package com.boundary.camel.component.url;
 
 import static java.net.HttpURLConnection.*;
+import static com.boundary.camel.component.url.UrlStatus.*;
 
+import java.util.UUID;
 import java.util.List;
 
 import org.apache.camel.EndpointInject;
@@ -24,6 +26,10 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,27 +38,88 @@ public class UrlProducerTest extends CamelTestSupport {
 	
     private static final Logger LOG = LoggerFactory.getLogger(UrlComponentTest.class);
     
+    private final String WEB_HOSTNAME = "httpbin.org";
+    private final String UKNOWN_HOST = "www." + UUID.randomUUID().toString() + ".org";
+    
     @Produce(uri = "direct:url-in")
     private ProducerTemplate in;
 
     @EndpointInject(uri = "mock:url-out")
     private MockEndpoint out;
 
-    @Test
-    public void testUrl() throws Exception {
+	private UrlConfiguration urlConfig;
+    
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+		urlConfig = new UrlConfiguration();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		urlConfig = null;
+		super.tearDown();
+	}
+	
+	private void sendRequestCheckResponse(int expectedResponseCode,UrlStatus status) throws InterruptedException {
         out.expectedMessageCount(1);
-        UrlConfiguration url = new UrlConfiguration();
         
-        in.sendBody(url);
+        in.sendBody(urlConfig);
         
         out.assertIsSatisfied();
+        
         List <Exchange> exchanges = out.getExchanges();
-    	LOG.info("EXCHANGE COUNT: " + exchanges.size());
-
+        assertEquals("Exchange count is incorrect",1,exchanges.size());
+        
         for(Exchange e: exchanges) {
         	UrlResult result = e.getIn().getBody(UrlResult.class);
-        	assertEquals("check url status",HTTP_OK,result.getResponseCode());
+        	assertEquals("HTTP response code is incorrect",expectedResponseCode,result.getResponseCode());
+        	assertEquals("UrlStats is incorrect",status,result.getURLStatus());
         }
+	}
+
+
+    @Test
+    public void testUrl() throws Exception {
+        sendRequestCheckResponse(HTTP_OK,OK);
+    }
+    
+    @Test
+    public void testUnknownHost() throws InterruptedException {
+    	urlConfig.setHost(UKNOWN_HOST);
+    	sendRequestCheckResponse(HTTP_BAD_GATEWAY,OK);
+    }
+    
+    @Test
+    public void testBasicAuth() throws InterruptedException {
+    	urlConfig.setHost(WEB_HOSTNAME);
+    	urlConfig.setPath("basic-auth/foo/bar");
+    	urlConfig.setUser("foo");
+    	urlConfig.setPassword("bar");
+    	sendRequestCheckResponse(HTTP_OK,OK);
+    }
+    
+    @Test
+    public void testRoot() throws InterruptedException {
+    	urlConfig.setHost(WEB_HOSTNAME);
+
+        sendRequestCheckResponse(HTTP_OK,OK);
+    }
+    
+    @Test
+    public void testDoNotFollowRedirects() throws InterruptedException {
+    	urlConfig.setHost(WEB_HOSTNAME);
+    	urlConfig.setPath("redirect-to?url=http://example.com/");
+    	urlConfig.setFollowRedirects(false);
+        sendRequestCheckResponse(HTTP_MOVED_TEMP,OK);
     }
 
     @Override
@@ -60,7 +127,9 @@ public class UrlProducerTest extends CamelTestSupport {
         return new RouteBuilder() {
             public void configure() {
                 from("direct:url-in")
+                .log("${body.getClass.toString}")
                 .to("url:http://localhost")
+                .log("${body.getResponseCode}")
                 .to("mock:url-out");
             }
         };
