@@ -48,15 +48,6 @@ public class UrlResult extends ServiceResult {
 		return url;
 	}
 
-	public String toString() {
-		StringBuffer s = new StringBuffer();
-		s.append(",url=" + getURL());
-		s.append(",timeout=" + getTimeout());
-		s.append(",urlStatus=" + (getURLStatus() == null ? "" : getURLStatus().toString()));
-		
-		return s.toString();
-	}
-
 	public long getResponseTime() {
 		return responseTime;
 	}
@@ -87,5 +78,13 @@ public class UrlResult extends ServiceResult {
 
 	public void setRequestMethod(String requestMethod) {
 		this.requestMethod = requestMethod;
+	}
+
+	@Override
+	public String toString() {
+		return "UrlResult [urlStatus=" + urlStatus + ", url=" + url
+				+ ", responseTime=" + responseTime + ", responseCode="
+				+ responseCode + ", responseBody=" + responseBody
+				+ ", requestMethod=" + requestMethod + "]";
 	}
 }
