@@ -21,6 +21,7 @@ import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
 
 import com.boundary.camel.component.common.ServiceEndpoint;
+import com.boundary.camel.component.common.ServiceStatus;
 
 
 /**
@@ -106,7 +107,16 @@ public class UrlEndpoint extends ServiceEndpoint {
     }
     
     private void setUrlResult(UrlResult result,UrlConfiguration configuration, UrlClient client) {
-    	result.setElapsedTime(client.getElapsedTime());
+    	result.setResponseTime(client.getResponseTime());
     	result.setResponseCode(client.getResponseCode());
+    	result.setResponseBody(client.getResponseBody());
+    	result.setHost(configuration.getHost());
+    	result.setPort(configuration.getPort());
+    	result.setMessage("OK");
+    	result.setRequestMethod(configuration.getRequestMethod());
+    	result.setURL(configuration.getUrl());
+
+    	result.setStatus(client.getURLStatus() == UrlStatus.OK ? ServiceStatus.SUCCESS : ServiceStatus.FAIL);
+    		
 	}
 }

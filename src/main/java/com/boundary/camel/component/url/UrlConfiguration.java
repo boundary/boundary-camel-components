@@ -44,8 +44,12 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 		scheme = "http";
 		followRedirects=true;
 		requestMethod = "GET";
-//		setPath(EMPTY_PATH);
-//		setPort(EMPTY_PORT);
+
+	}
+	
+	public UrlConfiguration(URL url) {
+		this.url = url;
+		updateParts();
 	}
 	
 	/**
@@ -54,11 +58,15 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 	 * @param uri {@link URI} use to configure the {@link PingConfiguration}
 	 */
 	public UrlConfiguration(URI uri) {
-		configure(uri);
+
 	}
 	
     public void configure(URI uri) {
-		
+		try {
+			this.url = uri.toURL();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
     }
     
     public UrlConfiguration copy() {
@@ -154,9 +162,16 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 	public URL getUrl() {
 		return url;
 	}
+	
+	private void updateParts() {
+		setHost(getUrl().getHost());
+		setPort(getUrl().getPort());
+		setPath(getUrl().getPath());
+	}
 
 	public void setUrl(URL url) {
 		this.url = url;
+		updateParts();
 	}
 
 	public void setFollowRedirects(boolean followRedirects) {
@@ -168,7 +183,10 @@ public class UrlConfiguration extends ServiceCheckBaseConfiguration implements C
 	}
 
 	public String getRequestMethod() {
-		// TODO Auto-generated method stub
 		return requestMethod;
+	}
+
+	public void setRequestMethod(String requestMethod) {
+		this.requestMethod = requestMethod;
 	}
 }

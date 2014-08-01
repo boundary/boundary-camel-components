@@ -42,6 +42,7 @@ public class UrlComponentTest extends CamelTestSupport {
     @EndpointInject(uri = "mock:url-out")
     private MockEndpoint out;
 
+    @Ignore
     @Test
     public void testUrl() throws Exception {
     	UrlConfiguration urlConfiguration = new UrlConfiguration();

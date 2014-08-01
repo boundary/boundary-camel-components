@@ -22,8 +22,9 @@ public class UrlResult extends ServiceResult {
 	
 	private UrlStatus urlStatus;
 	private URL url;
-	private long elapsedTime;
+	private long responseTime;
 	private int responseCode;
+	private String responseBody;
 	private String requestMethod;
 
 
@@ -56,12 +57,20 @@ public class UrlResult extends ServiceResult {
 		return s.toString();
 	}
 
-	public long getElapsedTime() {
-		return elapsedTime;
+	public long getResponseTime() {
+		return responseTime;
 	}
 
-	public void setElapsedTime(long elapsedTime) {
-		this.elapsedTime = elapsedTime;
+	public void setResponseTime(long responseTime) {
+		this.responseTime = responseTime;
+	}
+
+	public String getResponseBody() {
+		return responseBody;
+	}
+
+	public void setResponseBody(String responseBody) {
+		this.responseBody = responseBody;
 	}
 
 	public int getResponseCode() {
@@ -79,5 +88,4 @@ public class UrlResult extends ServiceResult {
 	public void setRequestMethod(String requestMethod) {
 		this.requestMethod = requestMethod;
 	}
-
 }
