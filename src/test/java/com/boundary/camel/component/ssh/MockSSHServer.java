@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 
-import org.apache.camel.component.ssh.FileKeyPairProvider;
+import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
+
 import org.apache.sshd.SshServer;
 import org.apache.sshd.server.PasswordAuthenticator;
 import org.apache.sshd.server.command.ScpCommandFactory;

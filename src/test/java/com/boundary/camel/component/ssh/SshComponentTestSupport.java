@@ -16,7 +16,9 @@
  */
 package com.boundary.camel.component.ssh;
 
-import org.apache.camel.component.ssh.FileKeyPairProvider;
+
+import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
+//import org.apache.camel.component.ssh.FileKeyPairProvider;
 import org.apache.camel.test.AvailablePortFinder;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.apache.sshd.SshServer;

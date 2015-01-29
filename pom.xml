@@ -20,7 +20,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <bouncycastle-version>1.49</bouncycastle-version>
-    <camel-version>2.13.1</camel-version>
+    <camel-version>2.14.1</camel-version>
     <commons-codec-version>1.9</commons-codec-version>
     <commons-exec-version>1.2</commons-exec-version>
     <spring-version>3.2.5.RELEASE</spring-version>
