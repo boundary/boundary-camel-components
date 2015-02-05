@@ -6,7 +6,7 @@
   <groupId>com.boundary</groupId>
   <artifactId>camel-service</artifactId>
   <packaging>jar</packaging>
-  <version>0.4.0</version>
+  <version>0.5.0</version>
 
   <name>Camel Service Components</name>
   <url>http://www.boundary.com</url>
